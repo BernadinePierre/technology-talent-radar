@@ -100,7 +100,7 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
           {region}
         </span>
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-xs font-medium">
-          <BarChart3 className="w-3 h-3" />
+          <Hourglass className="w-3 h-3" />
           {experience}
         </span>
       </div>
