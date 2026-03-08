@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { DiagnosticResult, SkillCategory } from "@/lib/skillData";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
 import { SupportCard } from "@/components/SupportCard";
