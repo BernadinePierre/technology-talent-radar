@@ -14,7 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      action_plan_templates: {
+        Row: {
+          action_text: string
+          created_at: string
+          id: string
+          skill_name: string
+        }
+        Insert: {
+          action_text: string
+          created_at?: string
+          id?: string
+          skill_name: string
+        }
+        Update: {
+          action_text?: string
+          created_at?: string
+          id?: string
+          skill_name?: string
+        }
+        Relationships: []
+      }
+      diagnostic_results: {
+        Row: {
+          core_score: number
+          created_at: string
+          cv_text: string
+          differentiator_score: number
+          experience: string
+          id: string
+          matched_skills: Json
+          overall_score: number
+          region: string
+          role_label: string
+          role_value: string
+          supporting_score: number
+          user_id: string
+        }
+        Insert: {
+          core_score: number
+          created_at?: string
+          cv_text: string
+          differentiator_score: number
+          experience: string
+          id?: string
+          matched_skills: Json
+          overall_score: number
+          region: string
+          role_label: string
+          role_value: string
+          supporting_score: number
+          user_id: string
+        }
+        Update: {
+          core_score?: number
+          created_at?: string
+          cv_text?: string
+          differentiator_score?: number
+          experience?: string
+          id?: string
+          matched_skills?: Json
+          overall_score?: number
+          region?: string
+          role_label?: string
+          role_value?: string
+          supporting_score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
