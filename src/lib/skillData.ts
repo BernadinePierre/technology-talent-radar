@@ -671,7 +671,9 @@ export interface DiagnosticResult {
 
 export function generateDiagnostic(
   cvSkills: string[],
-  roleValue: string
+  roleValue: string,
+  region: string,
+  experience: string
 ): DiagnosticResult {
   const role = roles.find((r) => r.value === roleValue)!;
   const cvSkillsLower = new Set(cvSkills.map((s) => s.toLowerCase()));
