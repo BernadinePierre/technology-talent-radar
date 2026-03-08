@@ -293,9 +293,6 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
               ))}
             </div>
             <SkillsTabContent skills={matchedSkills} category={activeTab} />
-            <p className="text-[10px] text-muted-foreground mt-4 text-right italic">
-              Source: IT Jobs Watch
-            </p>
           </div>
         </div>
       </div>
