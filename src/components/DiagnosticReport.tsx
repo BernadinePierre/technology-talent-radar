@@ -194,27 +194,51 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
 
   useEffect(() => {
     const fetchTemplates = async () => {
-      const skillNames = topGaps.slice(0, 3).map((g) => g.skill.name);
-      if (skillNames.length === 0) return;
+      const gapSkills = topGaps.slice(0, 3);
+      if (gapSkills.length === 0) return;
 
       const { data } = await supabase
         .from("action_plan_templates")
-        .select("skill_name, template")
-        .in("skill_name", skillNames);
+        .select("category, template");
 
-      if (data && data.length > 0) {
-        // Pick one template per skill, in gap order
-        const items: string[] = [];
-        for (const name of skillNames) {
-          const match = data.find((t) => t.skill_name === name);
-          if (match) items.push(match.template.replace("{skill}", name));
-          else items.push(`Study ${name} through courses or hands-on projects`);
-        }
-        setActionItems(items);
-      } else {
-        // Fallback
-        setActionItems(skillNames.map((n) => `Study ${n} through courses or hands-on projects`));
+      if (!data || data.length === 0) {
+        setActionItems(gapSkills.map((g) => `Study ${g.skill.name} through courses or hands-on projects`));
+        return;
       }
+
+      // Determine gap level based on demand
+      const getGapLevel = (demand: number): "low" | "medium" | "high" =>
+        demand >= 70 ? "high" : demand >= 40 ? "medium" : "low";
+
+      const categoryOrder: Record<string, string[]> = {
+        low: ["revision", "learning", "practice"],
+        medium: ["practice", "workflow", "learning", "project"],
+        high: ["project", "evidence", "workflow", "practice"],
+      };
+
+      const usedCategories = new Set<string>();
+      const items: string[] = [];
+
+      for (const gap of gapSkills) {
+        const level = getGapLevel(gap.skill.demandLevel);
+        const preferred = categoryOrder[level] || categoryOrder.medium;
+        // Pick first category not yet used
+        const cat = preferred.find((c) => !usedCategories.has(c)) || preferred[0];
+        usedCategories.add(cat);
+
+        const candidates = data.filter((t) => t.category === cat);
+        const pick = candidates.length > 0
+          ? candidates[Math.floor(Math.random() * candidates.length)]
+          : null;
+
+        items.push(
+          pick
+            ? pick.template.replace(/\{skill\}/g, gap.skill.name)
+            : `Study ${gap.skill.name} through courses or hands-on projects`
+        );
+      }
+
+      setActionItems(items);
     };
     fetchTemplates();
   }, [topGaps.map((g) => g.skill.name).join(",")]);
