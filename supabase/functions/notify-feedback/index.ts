@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 const NOTIFY_EMAIL = "bernadine.pierrejob@gmail.com";
@@ -19,27 +19,26 @@ Deno.serve(async (req) => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
-    const payload = await req.json();
-    const record = payload.record;
-
-    if (!record) {
-      throw new Error("No record in payload");
+    // Verify the user is authenticated
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      throw new Error("Missing authorization header");
     }
 
-    const { type, message, created_at, user_id } = record;
-
-    // Optionally fetch user email from profiles
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseKey = Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("display_name")
-      .eq("user_id", user_id)
-      .single();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error("Unauthorized");
+    }
 
-    const userName = profile?.display_name || user_id;
+    const { type, message } = await req.json();
+
+    const userName = user.user_metadata?.display_name || user.user_metadata?.full_name || user.email || user.id;
 
     const emailHtml = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -55,7 +54,7 @@ Deno.serve(async (req) => {
           </tr>
           <tr>
             <td style="padding: 8px; font-weight: bold; color: #555;">Date</td>
-            <td style="padding: 8px;">${new Date(created_at).toLocaleString()}</td>
+            <td style="padding: 8px;">${new Date().toLocaleString()}</td>
           </tr>
         </table>
         <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-top: 8px;">
