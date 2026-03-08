@@ -163,11 +163,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
     return actions[g.skill.name] || `Study ${g.skill.name} through courses or hands-on projects`;
   });
 
-  const tabs: { key: SkillCategory; label: string }[] = [
-    { key: "core", label: "Core Skills" },
-    { key: "supporting", label: "Supporting Skills" },
-    { key: "differentiator", label: "Differentiators" },
-  ];
+
 
   const topStrengthCategory = coreScore >= supportingScore && coreScore >= differentiatorScore
     ? "core skills"
