@@ -19,11 +19,27 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setCvText(ev.target?.result as string);
-    };
-    reader.readAsText(file);
+
+    if (file.name.endsWith(".pdf")) {
+      // For PDF files, read as text (basic extraction)
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const text = ev.target?.result as string;
+        // Extract readable text from PDF binary
+        const extracted = text
+          .replace(/[^\x20-\x7E\n\r\t]/g, " ")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+        setCvText(extracted || "PDF loaded — if text extraction was limited, please paste your CV text manually.");
+      };
+      reader.readAsText(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setCvText(ev.target?.result as string);
+      };
+      reader.readAsText(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -38,8 +54,8 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
         <h1 className="text-2xl md:text-3xl font-bold font-heading mb-2">
           Skill Gap Diagnostic
         </h1>
-        <p className="text-muted-foreground">
-          Paste your CV and select your target role to see how you compare with market demand.
+      <p className="text-muted-foreground">
+          Paste your CV (and optionally your LinkedIn profile) below, then select your target role to see how you compare with market demand.
         </p>
       </div>
 
@@ -52,7 +68,7 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
           id="cv-text"
           value={cvText}
           onChange={(e) => setCvText(e.target.value)}
-          placeholder="Paste your CV text here — include your skills, experience, and tools you've worked with…"
+          placeholder="Paste your CV text here (and optionally your LinkedIn profile) — include your skills, experience, and tools you've worked with…"
           className="w-full min-h-[200px] rounded-lg border border-input bg-card p-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y font-body"
           aria-label="CV text input"
         />
@@ -62,12 +78,12 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
             className="inline-flex items-center gap-2 text-sm text-secondary cursor-pointer hover:underline"
           >
             <Upload className="w-4 h-4" />
-            Upload .txt file
+            Upload .txt or .pdf file
           </label>
           <input
             id="cv-file"
             type="file"
-            accept=".txt"
+            accept=".txt,.pdf"
             onChange={handleFileUpload}
             className="sr-only"
             aria-label="Upload CV file"
