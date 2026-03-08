@@ -3,9 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DiagnosticInput } from "@/components/DiagnosticInput";
 import { DiagnosticReport } from "@/components/DiagnosticReport";
 import { DiagnosticResult, extractSkillsFromCV, generateDiagnostic } from "@/lib/skillData";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, History, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface DiagnosticFormData {
   cvText: string;
@@ -16,18 +19,40 @@ export interface DiagnosticFormData {
 
 const DiagnosticPage = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const [step, setStep] = useState<"input" | "processing" | "results">("input");
   const [result, setResult] = useState<DiagnosticResult | null>(null);
+  const [formData, setFormData] = useState<DiagnosticFormData | null>(null);
 
-  const handleSubmit = (data: DiagnosticFormData) => {
+  const handleSubmit = async (data: DiagnosticFormData) => {
     setStep("processing");
+    setFormData(data);
 
     // Simulate processing
-    setTimeout(() => {
+    setTimeout(async () => {
       const cvSkills = extractSkillsFromCV(data.cvText);
       const diagnostic = generateDiagnostic(cvSkills, data.role, data.region, data.experience);
       setResult(diagnostic);
       setStep("results");
+
+      // Save to DB if logged in
+      if (user) {
+        const { error } = await supabase.from("diagnostic_results").insert({
+          user_id: user.id,
+          role_value: diagnostic.role.value,
+          role_label: diagnostic.role.label,
+          region: diagnostic.region,
+          experience: diagnostic.experience,
+          cv_text: data.cvText,
+          matched_skills: diagnostic.matchedSkills as any,
+          overall_score: diagnostic.overallScore,
+          core_score: diagnostic.coreScore,
+          supporting_score: diagnostic.supportingScore,
+          differentiator_score: diagnostic.differentiatorScore,
+        });
+        if (error) toast.error("Failed to save result");
+        else toast.success("Result saved to your account");
+      }
     }, 2000);
   };
 
@@ -42,6 +67,25 @@ const DiagnosticPage = () => {
           <span className="font-heading text-xl font-bold text-primary tracking-tight">
             SkillScope
           </span>
+          <div className="ml-auto flex items-center gap-2">
+            {user ? (
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/history")}>
+                  <History className="w-4 h-4 mr-1" />
+                  History
+                </Button>
+                <Button variant="ghost" size="sm" onClick={signOut}>
+                  <LogOut className="w-4 h-4 mr-1" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Button variant="ghost" size="sm" onClick={() => navigate("/auth")}>
+                <LogIn className="w-4 h-4 mr-1" />
+                Sign In
+              </Button>
+            )}
+          </div>
         </div>
       </nav>
 
