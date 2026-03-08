@@ -193,7 +193,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
     } catch {
       const matched = matchedSkills.filter((m) => m.found);
       const lines = [
-        `SkillScope Readiness Report — ${role.label}`,
+        `Tech Talent Radar Readiness Report — ${role.label}`,
         `Readiness Score: ${overallScore}%`,
         `Core: ${coreScore}% | Supporting: ${supportingScore}% | Differentiators: ${differentiatorScore}%`,
         "",
