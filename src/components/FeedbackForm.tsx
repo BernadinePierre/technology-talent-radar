@@ -57,6 +57,13 @@ export const FeedbackForm = () => {
       setMessage("");
       setType("suggestion");
       setOpen(false);
+
+      // Send email notification (fire-and-forget)
+      supabase.functions.invoke("notify-feedback", {
+        body: { type: result.data.type, message: result.data.message },
+      }).catch(() => {
+        // Silent fail - feedback was already saved
+      });
     }
   };
 
