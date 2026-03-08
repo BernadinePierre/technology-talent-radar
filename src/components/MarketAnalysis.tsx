@@ -113,15 +113,17 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience, isPri
         <h3 className="text-sm font-semibold font-heading text-muted-foreground uppercase tracking-wider">
           Market Analysis
         </h3>
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-secondary hover:underline"
-        >
-          View on IT Jobs Watch
-          <ExternalLink className="w-3 h-3" />
-        </a>
+        {!isPrinting && (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-secondary hover:underline"
+          >
+            View on IT Jobs Watch
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        )}
       </div>
 
       {/* Role + Region + Experience tags */}
