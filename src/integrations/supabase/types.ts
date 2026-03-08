@@ -38,6 +38,45 @@ export type Database = {
         }
         Relationships: []
       }
+      anonymous_diagnostic_results: {
+        Row: {
+          core_score: number
+          created_at: string
+          differentiator_score: number
+          experience: string
+          id: string
+          overall_score: number
+          region: string
+          role_label: string
+          role_value: string
+          supporting_score: number
+        }
+        Insert: {
+          core_score: number
+          created_at?: string
+          differentiator_score: number
+          experience: string
+          id?: string
+          overall_score: number
+          region: string
+          role_label: string
+          role_value: string
+          supporting_score: number
+        }
+        Update: {
+          core_score?: number
+          created_at?: string
+          differentiator_score?: number
+          experience?: string
+          id?: string
+          overall_score?: number
+          region?: string
+          role_label?: string
+          role_value?: string
+          supporting_score?: number
+        }
+        Relationships: []
+      }
       app_config: {
         Row: {
           description: string | null
