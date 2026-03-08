@@ -637,7 +637,7 @@ export const roles: RoleData[] = ([
       { name: "Workshop Facilitation", category: "differentiator", demandLevel: 50 },
     ],
   },
-].sort((a, b) => a.label.localeCompare(b.label));
+] as RoleData[]).sort((a, b) => a.label.localeCompare(b.label));
 
 export const ukRegions = [
   "East Midlands",
