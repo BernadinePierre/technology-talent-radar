@@ -70,6 +70,9 @@ const DiagnosticPage = () => {
           <div className="ml-auto flex items-center gap-2">
             {user ? (
               <>
+                <span className="text-sm text-muted-foreground hidden sm:inline">
+                  {user.user_metadata?.display_name || user.user_metadata?.full_name || user.email}
+                </span>
                 <Button variant="ghost" size="sm" onClick={() => navigate("/history")}>
                   <History className="w-4 h-4 mr-1" />
                   History
