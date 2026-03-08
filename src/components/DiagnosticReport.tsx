@@ -62,7 +62,7 @@ const ReadinessGauge = ({ score }: { score: number }) => {
           stroke={gaugeColor}
           strokeWidth={stroke}
           strokeLinecap="round"
-          strokeDasharray={circumference}
+          strokeDasharray={`${circumference} ${circumference}`}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
           transition={{ duration: 1.2, ease: "easeOut" }}
