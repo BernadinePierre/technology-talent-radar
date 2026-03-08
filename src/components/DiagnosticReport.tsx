@@ -142,6 +142,10 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
   const handleDownload = async () => {
     if (!reportRef.current) return;
     try {
+      setIsPrinting(true);
+      // Wait for React to re-render with print layout
+      await new Promise((r) => setTimeout(r, 100));
+
       const canvas = await html2canvas(reportRef.current, {
         scale: 2,
         useCORS: true,
@@ -187,6 +191,8 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       a.download = `skillscope-${role.value}.txt`;
       a.click();
       URL.revokeObjectURL(url);
+    } finally {
+      setIsPrinting(false);
     }
   };
 
