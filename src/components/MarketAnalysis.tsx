@@ -1,5 +1,7 @@
 import { ExternalLink, MapPin, Briefcase, Hourglass, Info } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Tooltip,
   TooltipContent,
