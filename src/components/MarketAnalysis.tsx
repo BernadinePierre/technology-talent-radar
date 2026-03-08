@@ -14,6 +14,7 @@ interface MarketAnalysisProps {
   roleValue: string;
   region: string;
   experience: string;
+  isPrinting?: boolean;
 }
 
 /* ── Mock market data keyed by experience bracket ── */
