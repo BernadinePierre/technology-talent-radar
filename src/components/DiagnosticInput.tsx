@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { roles, ukRegions, experienceLevels } from "@/lib/skillData";
 import type { DiagnosticFormData } from "@/pages/DiagnosticPage";
-import { Upload, FileText } from "lucide-react";
+import { Upload, FileText, Loader2 } from "lucide-react";
+import * as pdfjsLib from "pdfjs-dist";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs`;
 
 interface DiagnosticInputProps {
   onSubmit: (data: DiagnosticFormData) => void;
