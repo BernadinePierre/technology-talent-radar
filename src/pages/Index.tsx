@@ -49,10 +49,8 @@ const Index = () => {
               transition={{ duration: 0.6 }}
             >
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight mb-6">
-                Know your{" "}
-                <span className="text-gradient">skill gaps</span>
-                <br />
-                before the market does.
+                See the gap between your{" "}
+                <span className="text-gradient">skills</span> and the role you want.
               </h1>
               <p className="text-lg md:text-xl text-primary-foreground/70 mb-10 max-w-lg leading-relaxed">
                 Compare your CV against live UK tech job demand. Get a clear diagnostic of what you have, what you're missing, and what to learn next.
