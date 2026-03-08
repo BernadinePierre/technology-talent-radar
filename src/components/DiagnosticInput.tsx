@@ -38,8 +38,8 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
         <h1 className="text-2xl md:text-3xl font-bold font-heading mb-2">
           Skill Gap Diagnostic
         </h1>
-        <p className="text-muted-foreground">
-          Paste your CV and select your target role to see how you compare with market demand.
+      <p className="text-muted-foreground">
+          Paste your CV (and optionally your LinkedIn profile) below, then select your target role to see how you compare with market demand.
         </p>
       </div>
 
