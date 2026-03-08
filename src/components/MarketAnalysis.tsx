@@ -1,4 +1,4 @@
-import { ExternalLink, TrendingUp, MapPin, Briefcase, PoundSterling, BarChart3 } from "lucide-react";
+import { ExternalLink, MapPin, Briefcase, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface MarketAnalysisProps {
