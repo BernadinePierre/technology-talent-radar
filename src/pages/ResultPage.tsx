@@ -62,7 +62,7 @@ const ResultPage = () => {
             History
           </Button>
           <span className="font-heading text-xl font-bold text-primary tracking-tight">
-            SkillScope
+            Tech Talent Radar
           </span>
         </div>
       </nav>
