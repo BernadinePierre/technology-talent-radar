@@ -392,7 +392,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       <SupportCard />
 
       {/* Actions */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 justify-center">
         <Button variant="hero" size="lg" onClick={handleDownload}>
           <Download className="w-4 h-4 mr-1" />
           Download Report
