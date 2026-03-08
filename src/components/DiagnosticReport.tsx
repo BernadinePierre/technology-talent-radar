@@ -286,6 +286,15 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         </div>
       </div>
 
+
+      {/* Market Analysis */}
+      <MarketAnalysis
+        roleLabel={role.label}
+        roleValue={role.value}
+        region={region}
+        experience={experience}
+      />
+
       {/* 30-Day Action Plan */}
       {actionItems.length > 0 && (
         <div className="bg-card rounded-xl border border-border p-6">
