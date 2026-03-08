@@ -258,7 +258,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
                     key={g.skill.name}
                     className="flex items-center gap-3 py-1.5 px-3 rounded-lg bg-muted/40"
                   >
-                    <span className="w-5 h-5 rounded-full bg-destructive/15 text-destructive text-xs font-bold flex items-center justify-center shrink-0">
+                    <span className="w-5 h-5 rounded-full bg-secondary/20 text-secondary text-xs font-bold flex items-center justify-center shrink-0">
                       {i + 1}
                     </span>
                     <span className="text-sm font-medium flex-1">{g.skill.name}</span>
