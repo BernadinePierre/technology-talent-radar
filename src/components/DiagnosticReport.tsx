@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { DiagnosticResult, SkillCategory } from "@/lib/skillData";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
 import { SupportCard } from "@/components/SupportCard";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
+import { useRef } from "react";
 
 interface DiagnosticReportProps {
   result: DiagnosticResult;
@@ -56,17 +61,19 @@ const ReadinessGauge = ({ score }: { score: number }) => {
           strokeLinecap="round"
         />
         {/* Score arc */}
-        <motion.path
-          d="M 10 90 A 70 70 0 0 1 170 90"
-          fill="none"
-          stroke={gaugeColor}
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={`${circumference} ${circumference}`}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-        />
+        {score > 0 && (
+          <motion.path
+            d="M 10 90 A 70 70 0 0 1 170 90"
+            fill="none"
+            stroke={gaugeColor}
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={`${circumference} ${circumference}`}
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset: offset }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+          />
+        )}
       </svg>
       <div className="-mt-14 text-center">
         <motion.span
@@ -122,32 +129,64 @@ const SkillsTabContent = ({
 export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) => {
   const { role, region, experience, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore } = result;
   const [activeTab, setActiveTab] = useState<SkillCategory>("core");
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const gaps = matchedSkills.filter((m) => !m.found);
   const topGaps = [...gaps]
     .sort((a, b) => b.skill.demandLevel - a.skill.demandLevel)
     .slice(0, 5);
 
-  const handleDownload = () => {
-    const matched = matchedSkills.filter((m) => m.found);
-    const lines = [
-      `SkillScope Readiness Report — ${role.label}`,
-      `Readiness Score: ${overallScore}%`,
-      `Core: ${coreScore}% | Supporting: ${supportingScore}% | Differentiators: ${differentiatorScore}%`,
-      "",
-      "MATCHED SKILLS:",
-      ...matched.map((m) => `  ✓ ${m.skill.name} (${m.skill.category})`),
-      "",
-      "SKILL GAPS:",
-      ...gaps.map((m) => `  ✗ ${m.skill.name} (${m.skill.category}, demand: ${m.skill.demandLevel}%)`),
-    ];
-    const blob = new Blob([lines.join("\n")], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `skillscope-${role.value}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleDownload = async () => {
+    if (!reportRef.current) return;
+    try {
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      let heightLeft = pdfHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pdf.internal.pageSize.getHeight();
+      
+      while (heightLeft > 0) {
+        position -= pdf.internal.pageSize.getHeight();
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pdf.internal.pageSize.getHeight();
+      }
+      
+      pdf.save(`skillscope-${role.value}.pdf`);
+    } catch {
+      // Fallback to text
+      const matched = matchedSkills.filter((m) => m.found);
+      const lines = [
+        `SkillScope Readiness Report — ${role.label}`,
+        `Readiness Score: ${overallScore}%`,
+        `Core: ${coreScore}% | Supporting: ${supportingScore}% | Differentiators: ${differentiatorScore}%`,
+        "",
+        "MATCHED SKILLS:",
+        ...matched.map((m) => `  ✓ ${m.skill.name} (${m.skill.category})`),
+        "",
+        "SKILL GAPS:",
+        ...gaps.map((m) => `  ✗ ${m.skill.name} (${m.skill.category}, demand: ${m.skill.demandLevel}%)`),
+      ];
+      const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `skillscope-${role.value}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   };
 
   // Fetch action items from DB templates
@@ -213,6 +252,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
+      ref={reportRef}
     >
       {/* Header */}
       <div>
@@ -362,6 +402,23 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
           New Diagnostic
         </Button>
       </div>
+
+      {/* Create Account CTA for guests */}
+      {!user && (
+        <div className="bg-muted/40 rounded-xl border border-border p-6 text-center">
+          <p className="text-sm text-muted-foreground mb-3">
+            Want to save reports and track your progress over time?
+          </p>
+          <Button
+            variant="accent"
+            size="lg"
+            onClick={() => navigate("/auth")}
+          >
+            <UserPlus className="w-4 h-4 mr-1" />
+            Create an account here
+          </Button>
+        </div>
+      )}
     </motion.div>
   );
 };
