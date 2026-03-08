@@ -442,6 +442,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
           roleValue={role.value}
           region={region}
           experience={experience}
+          isPrinting={isPrinting}
         />
 
         {/* 30-Day Action Plan */}
