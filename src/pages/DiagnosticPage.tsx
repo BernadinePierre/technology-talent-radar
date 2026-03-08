@@ -25,7 +25,7 @@ const DiagnosticPage = () => {
     // Simulate processing
     setTimeout(() => {
       const cvSkills = extractSkillsFromCV(data.cvText);
-      const diagnostic = generateDiagnostic(cvSkills, data.role);
+      const diagnostic = generateDiagnostic(cvSkills, data.role, data.region, data.experience);
       setResult(diagnostic);
       setStep("results");
     }, 2000);

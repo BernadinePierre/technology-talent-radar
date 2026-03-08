@@ -697,5 +697,5 @@ export function generateDiagnostic(
     coreScore * 0.5 + supportingScore * 0.3 + differentiatorScore * 0.2
   );
 
-  return { role, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore };
+  return { role, region, experience, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore };
 }
