@@ -19,11 +19,27 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setCvText(ev.target?.result as string);
-    };
-    reader.readAsText(file);
+
+    if (file.name.endsWith(".pdf")) {
+      // For PDF files, read as text (basic extraction)
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const text = ev.target?.result as string;
+        // Extract readable text from PDF binary
+        const extracted = text
+          .replace(/[^\x20-\x7E\n\r\t]/g, " ")
+          .replace(/\s{2,}/g, " ")
+          .trim();
+        setCvText(extracted || "PDF loaded — if text extraction was limited, please paste your CV text manually.");
+      };
+      reader.readAsText(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setCvText(ev.target?.result as string);
+      };
+      reader.readAsText(file);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
