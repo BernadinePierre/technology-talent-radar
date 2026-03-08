@@ -1,4 +1,4 @@
-import { ExternalLink, TrendingUp, MapPin, Briefcase, PoundSterling, BarChart3 } from "lucide-react";
+import { ExternalLink, MapPin, Briefcase, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface MarketAnalysisProps {
@@ -56,8 +56,10 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
 
   const url = buildITJobsWatchUrl(roleLabel, region);
 
-  // Simulated demand trend
+  // Simulated stats
   const demandChange = Math.round((multiplier - 0.9) * 100 + 8);
+  const openRoles = Math.round(800 + multiplier * 400 + (salaryBands[experience]?.median ?? 45000) / 100);
+  const marketShare = ((multiplier * 3.2 + demandChange * 0.05)).toFixed(1);
 
   return (
     <motion.div
@@ -97,32 +99,25 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
         </span>
       </div>
 
-      {/* Salary + Demand grid */}
+      {/* Stats grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-muted/40 rounded-lg p-4 text-center">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Min Salary</p>
-          <p className="text-lg font-bold font-heading text-foreground">{formatSalary(salary.min)}</p>
-        </div>
-        <div className="bg-muted/40 rounded-lg p-4 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Median Salary</p>
-          <p className="text-lg font-bold font-heading text-secondary">{formatSalary(salary.median)}</p>
+          <p className="text-lg font-bold font-heading text-secondary">£{salary.median.toLocaleString()}</p>
         </div>
         <div className="bg-muted/40 rounded-lg p-4 text-center">
-          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Max Salary</p>
-          <p className="text-lg font-bold font-heading text-foreground">{formatSalary(salary.max)}</p>
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Open Roles</p>
+          <p className="text-lg font-bold font-heading text-foreground">{openRoles.toLocaleString()}</p>
         </div>
         <div className="bg-muted/40 rounded-lg p-4 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Demand Trend</p>
-          <p className="text-lg font-bold font-heading text-accent inline-flex items-center gap-1">
-            <TrendingUp className="w-4 h-4" />
-            +{demandChange}%
-          </p>
+          <p className="text-lg font-bold font-heading text-accent">+{demandChange}%</p>
+        </div>
+        <div className="bg-muted/40 rounded-lg p-4 text-center">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Market Share</p>
+          <p className="text-lg font-bold font-heading text-foreground">{marketShare}% <span className="text-[10px] font-normal text-muted-foreground">of UK tech roles</span></p>
         </div>
       </div>
-
-      <p className="text-[10px] text-muted-foreground mt-4 italic">
-        Indicative figures derived from IT Jobs Watch. Visit the link above for live data.
-      </p>
     </motion.div>
   );
 };
