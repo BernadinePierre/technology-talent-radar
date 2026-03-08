@@ -199,7 +199,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
 
       const { data } = await supabase
         .from("action_plan_templates")
-        .select("skill_name, action_text")
+        .select("skill_name, template")
         .in("skill_name", skillNames);
 
       if (data && data.length > 0) {
@@ -207,7 +207,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         const items: string[] = [];
         for (const name of skillNames) {
           const match = data.find((t) => t.skill_name === name);
-          if (match) items.push(match.action_text);
+          if (match) items.push(match.template.replace("{skill}", name));
           else items.push(`Study ${name} through courses or hands-on projects`);
         }
         setActionItems(items);
