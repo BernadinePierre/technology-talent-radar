@@ -660,6 +660,8 @@ export function extractSkillsFromCV(cvText: string): string[] {
 
 export interface DiagnosticResult {
   role: RoleData;
+  region: string;
+  experience: string;
   matchedSkills: { skill: Skill; found: boolean }[];
   overallScore: number;
   coreScore: number;
@@ -669,7 +671,9 @@ export interface DiagnosticResult {
 
 export function generateDiagnostic(
   cvSkills: string[],
-  roleValue: string
+  roleValue: string,
+  region: string,
+  experience: string
 ): DiagnosticResult {
   const role = roles.find((r) => r.value === roleValue)!;
   const cvSkillsLower = new Set(cvSkills.map((s) => s.toLowerCase()));
@@ -693,5 +697,5 @@ export function generateDiagnostic(
     coreScore * 0.5 + supportingScore * 0.3 + differentiatorScore * 0.2
   );
 
-  return { role, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore };
+  return { role, region, experience, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore };
 }

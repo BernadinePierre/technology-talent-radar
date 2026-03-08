@@ -3,6 +3,7 @@ import { DiagnosticResult, SkillCategory } from "@/lib/skillData";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
+import { MarketAnalysis } from "@/components/MarketAnalysis";
 
 interface DiagnosticReportProps {
   result: DiagnosticResult;
@@ -117,7 +118,7 @@ const SkillsTabContent = ({
 };
 
 export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) => {
-  const { role, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore } = result;
+  const { role, region, experience, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore } = result;
   const [activeTab, setActiveTab] = useState<SkillCategory>("core");
 
   const gaps = matchedSkills.filter((m) => !m.found);
@@ -284,6 +285,15 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
           </div>
         </div>
       </div>
+
+
+      {/* Market Analysis */}
+      <MarketAnalysis
+        roleLabel={role.label}
+        roleValue={role.value}
+        region={region}
+        experience={experience}
+      />
 
       {/* 30-Day Action Plan */}
       {actionItems.length > 0 && (
