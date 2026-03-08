@@ -56,17 +56,19 @@ const ReadinessGauge = ({ score }: { score: number }) => {
           strokeLinecap="round"
         />
         {/* Score arc */}
-        <motion.path
-          d="M 10 90 A 70 70 0 0 1 170 90"
-          fill="none"
-          stroke={gaugeColor}
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={`${circumference} ${circumference}`}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-        />
+        {score > 0 && (
+          <motion.path
+            d="M 10 90 A 70 70 0 0 1 170 90"
+            fill="none"
+            stroke={gaugeColor}
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={`${circumference} ${circumference}`}
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset: offset }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+          />
+        )}
       </svg>
       <div className="-mt-14 text-center">
         <motion.span
