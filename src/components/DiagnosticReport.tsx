@@ -1,46 +1,116 @@
+import { useState } from "react";
 import { DiagnosticResult, SkillCategory } from "@/lib/skillData";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, RotateCcw, Download } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface DiagnosticReportProps {
   result: DiagnosticResult;
   onRestart: () => void;
 }
 
-const categoryMeta: Record<SkillCategory, { label: string; description: string }> = {
+const categoryMeta: Record<SkillCategory, { label: string; description: string; color: string }> = {
   core: {
     label: "Core Skills",
     description: "Essential requirements — most job listings expect these.",
+    color: "bg-secondary text-secondary-foreground",
   },
   supporting: {
     label: "Supporting Skills",
     description: "Complementary tools and knowledge that strengthen applications.",
+    color: "bg-accent text-accent-foreground",
   },
   differentiator: {
     label: "Differentiators",
     description: "Skills that set candidates apart from the competition.",
+    color: "bg-primary text-primary-foreground",
   },
 };
 
-const ScoreBar = ({ label, score }: { label: string; score: number }) => {
-  const color =
+/* ── Gauge ── */
+const ReadinessGauge = ({ score }: { score: number }) => {
+  const radius = 70;
+  const stroke = 12;
+  const circumference = Math.PI * radius; // half-circle
+  const offset = circumference - (score / 100) * circumference;
+
+  const gaugeColor =
     score >= 70
-      ? "bg-accent"
+      ? "hsl(var(--accent))"
       : score >= 40
-      ? "bg-secondary"
-      : "bg-destructive";
+      ? "hsl(var(--secondary))"
+      : "hsl(var(--destructive))";
 
   return (
-    <div className="space-y-1.5">
-      <div className="flex justify-between text-sm">
-        <span className="font-medium">{label}</span>
-        <span className="text-muted-foreground font-mono">{score}%</span>
-      </div>
-      <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-        <div
-          className={`h-full rounded-full transition-all duration-700 ${color}`}
-          style={{ width: `${score}%` }}
+    <div className="flex flex-col items-center">
+      <svg width="180" height="100" viewBox="0 0 180 100" className="overflow-visible">
+        {/* Background arc */}
+        <path
+          d="M 10 90 A 70 70 0 0 1 170 90"
+          fill="none"
+          stroke="hsl(var(--muted))"
+          strokeWidth={stroke}
+          strokeLinecap="round"
         />
+        {/* Score arc */}
+        <motion.path
+          d="M 10 90 A 70 70 0 0 1 170 90"
+          fill="none"
+          stroke={gaugeColor}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: offset }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        />
+      </svg>
+      <div className="-mt-14 text-center">
+        <motion.span
+          className="text-4xl font-bold font-heading"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          {score}%
+        </motion.span>
+      </div>
+    </div>
+  );
+};
+
+/* ── Skills Map Tab Content ── */
+const SkillsTabContent = ({
+  skills,
+  category,
+}: {
+  skills: DiagnosticResult["matchedSkills"];
+  category: SkillCategory;
+}) => {
+  const catSkills = skills.filter((m) => m.skill.category === category);
+  const meta = categoryMeta[category];
+
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground mb-4">{meta.description}</p>
+      <div className="flex flex-wrap gap-2">
+        {catSkills.map((m) => (
+          <span
+            key={m.skill.name}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              m.found
+                ? meta.color
+                : "bg-muted/60 text-muted-foreground line-through decoration-1"
+            }`}
+          >
+            {m.found ? (
+              <CheckCircle2 className="w-3 h-3 shrink-0" />
+            ) : (
+              <XCircle className="w-3 h-3 shrink-0" />
+            )}
+            {m.skill.name}
+          </span>
+        ))}
       </div>
     </div>
   );
@@ -48,14 +118,18 @@ const ScoreBar = ({ label, score }: { label: string; score: number }) => {
 
 export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) => {
   const { role, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore } = result;
+  const [activeTab, setActiveTab] = useState<SkillCategory>("core");
 
   const gaps = matchedSkills.filter((m) => !m.found);
-  const matched = matchedSkills.filter((m) => m.found);
+  const topGaps = [...gaps]
+    .sort((a, b) => b.skill.demandLevel - a.skill.demandLevel)
+    .slice(0, 5);
 
   const handleDownload = () => {
+    const matched = matchedSkills.filter((m) => m.found);
     const lines = [
-      `SkillScope Diagnostic Report — ${role.label}`,
-      `Overall Score: ${overallScore}%`,
+      `SkillScope Readiness Report — ${role.label}`,
+      `Readiness Score: ${overallScore}%`,
       `Core: ${coreScore}% | Supporting: ${supportingScore}% | Differentiators: ${differentiatorScore}%`,
       "",
       "MATCHED SKILLS:",
@@ -73,98 +147,168 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
     URL.revokeObjectURL(url);
   };
 
+  // Generate action items from top gaps
+  const actionItems = topGaps.slice(0, 3).map((g) => {
+    const actions: Record<string, string> = {
+      SQL: "Complete an SQL practice project on real datasets",
+      Python: "Build a Python portfolio project (e.g., data pipeline)",
+      "CI/CD": "Learn CI/CD with an online course or hands-on lab",
+      Docker: "Containerise a personal project with Docker",
+      Kubernetes: "Set up a local K8s cluster and deploy an app",
+      AWS: "Earn an AWS Cloud Practitioner certification",
+      Terraform: "Write Terraform configs for a sample infrastructure",
+      "Machine Learning": "Complete a Kaggle competition or ML course",
+    };
+    return actions[g.skill.name] || `Study ${g.skill.name} through courses or hands-on projects`;
+  });
+
+  const tabs: { key: SkillCategory; label: string }[] = [
+    { key: "core", label: "Core Skills" },
+    { key: "supporting", label: "Supporting Skills" },
+    { key: "differentiator", label: "Differentiators" },
+  ];
+
+  const scoreLabel =
+    overallScore >= 70
+      ? "Strong alignment — focus on differentiators to stand out."
+      : overallScore >= 40
+      ? "Moderate coverage — address core gaps to strengthen your profile."
+      : "Early stage — prioritise building core skills first.";
+
   return (
-    <div className="space-y-8">
+    <motion.div
+      className="space-y-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
       {/* Header */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold font-heading mb-1">
-          Diagnostic Report
+          Readiness Report
         </h1>
         <p className="text-muted-foreground">
           Target role: <span className="font-semibold text-foreground">{role.label}</span>
         </p>
       </div>
 
-      {/* Overall Score */}
-      <div className="bg-card rounded-xl border border-border p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-20 h-20 rounded-full border-4 border-secondary flex items-center justify-center">
-            <span className="text-2xl font-bold font-heading">{overallScore}%</span>
+      {/* Top Row: Gauge + Gaps */}
+      <div className="grid md:grid-cols-5 gap-6">
+        {/* Readiness Score Card */}
+        <div className="md:col-span-2 bg-card rounded-xl border border-border p-6 flex flex-col items-center">
+          <h2 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
+            Readiness Score
+          </h2>
+          <ReadinessGauge score={overallScore} />
+          <p className="text-xs text-muted-foreground text-center mt-4 max-w-[220px]">
+            {scoreLabel}
+          </p>
+
+          {/* Mini score bars */}
+          <div className="w-full mt-6 space-y-3">
+            {[
+              { label: "Core", score: coreScore, color: "bg-secondary" },
+              { label: "Supporting", score: supportingScore, color: "bg-accent" },
+              { label: "Differentiators", score: differentiatorScore, color: "bg-primary" },
+            ].map((bar) => (
+              <div key={bar.label} className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="font-medium">{bar.label}</span>
+                  <span className="text-muted-foreground font-mono">{bar.score}%</span>
+                </div>
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                  <motion.div
+                    className={`h-full rounded-full ${bar.color}`}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${bar.score}%` }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-          <div>
-            <h2 className="text-lg font-semibold font-heading">Overall Match</h2>
-            <p className="text-sm text-muted-foreground">
-              {overallScore >= 70
-                ? "Strong alignment — focus on differentiators."
-                : overallScore >= 40
-                ? "Moderate coverage — core gaps need attention."
-                : "Early stage — prioritise core skills."}
+        </div>
+
+        {/* Top Skill Gaps + Skills Map */}
+        <div className="md:col-span-3 space-y-6">
+          {/* Top Skill Gaps */}
+          {topGaps.length > 0 && (
+            <div className="bg-card rounded-xl border border-border p-6">
+              <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-3 uppercase tracking-wider">
+                Top Skill Gaps
+              </h3>
+              <ol className="space-y-2">
+                {topGaps.map((g, i) => (
+                  <li
+                    key={g.skill.name}
+                    className="flex items-center gap-3 py-1.5 px-3 rounded-lg bg-muted/40"
+                  >
+                    <span className="w-5 h-5 rounded-full bg-destructive/15 text-destructive text-xs font-bold flex items-center justify-center shrink-0">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm font-medium flex-1">{g.skill.name}</span>
+                    <span className="text-xs text-muted-foreground font-mono">
+                      {g.skill.demandLevel}% demand
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          {/* Skills Map */}
+          <div className="bg-card rounded-xl border border-border p-6">
+            <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
+              Skills Map
+            </h3>
+            {/* Tabs */}
+            <div className="flex gap-1 mb-4 bg-muted/50 rounded-lg p-1">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex-1 text-xs font-medium px-3 py-2 rounded-md transition-all ${
+                    activeTab === tab.key
+                      ? "bg-card text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <SkillsTabContent skills={matchedSkills} category={activeTab} />
+            <p className="text-[10px] text-muted-foreground mt-4 text-right italic">
+              Source: IT Jobs Watch
             </p>
           </div>
         </div>
-        <div className="space-y-4">
-          <ScoreBar label="Core Skills" score={coreScore} />
-          <ScoreBar label="Supporting Skills" score={supportingScore} />
-          <ScoreBar label="Differentiators" score={differentiatorScore} />
-        </div>
       </div>
 
-      {/* Skill Breakdown */}
-      {(["core", "supporting", "differentiator"] as SkillCategory[]).map((cat) => {
-        const catSkills = matchedSkills.filter((m) => m.skill.category === cat);
-        const meta = categoryMeta[cat];
-        return (
-          <div key={cat} className="bg-card rounded-xl border border-border p-6">
-            <h3 className="text-lg font-semibold font-heading mb-1">{meta.label}</h3>
-            <p className="text-xs text-muted-foreground mb-4">{meta.description}</p>
-            <div className="grid gap-2">
-              {catSkills.map((m) => (
-                <div
-                  key={m.skill.name}
-                  className="flex items-center justify-between py-2 px-3 rounded-lg bg-muted/50"
-                >
-                  <div className="flex items-center gap-2.5">
-                    {m.found ? (
-                      <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-destructive shrink-0" />
-                    )}
-                    <span className="text-sm font-medium">{m.skill.name}</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {m.skill.demandLevel}% demand
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })}
-
-      {/* Gaps Summary */}
-      {gaps.length > 0 && (
+      {/* 30-Day Action Plan */}
+      {actionItems.length > 0 && (
         <div className="bg-card rounded-xl border border-border p-6">
-          <h3 className="text-lg font-semibold font-heading mb-3">
-            Recommended Development Areas
+          <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
+            30-Day Action Plan
           </h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            These skills appeared in market demand data but weren't detected in your CV. Prioritise by demand level.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {gaps
-              .sort((a, b) => b.skill.demandLevel - a.skill.demandLevel)
-              .map((m) => (
-                <span
-                  key={m.skill.name}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-muted/30 text-xs font-medium"
-                >
-                  {m.skill.name}
-                  <span className="text-muted-foreground">{m.skill.demandLevel}%</span>
-                </span>
-              ))}
+          <div className="space-y-3">
+            {actionItems.map((action, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-3 py-2 px-3 rounded-lg bg-muted/30"
+              >
+                <TrendingUp className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+                <span className="text-sm">{action}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
+
+      {/* Attribution */}
+      <p className="text-center text-[11px] text-muted-foreground">
+        Labour market data derived from IT Jobs Watch (CC BY-NC-SC 4.0).
+      </p>
 
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
@@ -177,6 +321,6 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
           New Diagnostic
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 };
