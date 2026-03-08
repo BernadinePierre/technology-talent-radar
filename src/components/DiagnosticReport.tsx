@@ -239,6 +239,9 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
               </div>
             ))}
           </div>
+          <p className="text-sm text-muted-foreground text-center mt-5 leading-relaxed">
+            {scoreSummary}
+          </p>
         </div>
 
         {/* Top Skill Gaps + Skills Map */}
