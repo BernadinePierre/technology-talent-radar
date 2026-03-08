@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
+import { SupportCard } from "@/components/SupportCard";
 import { supabase } from "@/integrations/supabase/client";
 
 interface DiagnosticReportProps {
@@ -346,6 +347,9 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       <p className="text-center text-[11px] text-muted-foreground">
         Labour market data derived from IT Jobs Watch (CC BY-NC-SC 4.0).
       </p>
+
+      {/* Support */}
+      <SupportCard />
 
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
