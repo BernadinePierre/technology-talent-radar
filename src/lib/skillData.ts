@@ -12,7 +12,7 @@ export interface RoleData {
   skills: Skill[];
 }
 
-export const roles: RoleData[] = [
+export const roles: RoleData[] = ([
   {
     label: "Data Engineer",
     value: "data-engineer",
