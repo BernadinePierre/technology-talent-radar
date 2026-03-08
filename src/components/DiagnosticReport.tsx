@@ -447,7 +447,24 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       </p>
 
       {/* Support */}
-      <SupportCard />
+      {isPrinting ? (
+        <div className="bg-card rounded-xl border border-border p-6 text-center">
+          <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-1">
+            Support continued development
+          </h3>
+          <p className="text-xs text-muted-foreground mb-2">
+            Keeps the tool free for everyone.
+          </p>
+          <a
+            href="https://donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00"
+            className="text-sm font-semibold text-primary underline"
+          >
+            donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00
+          </a>
+        </div>
+      ) : (
+        <SupportCard />
+      )}
 
       {/* Actions */}
       <div className="flex flex-wrap gap-3 justify-center">
