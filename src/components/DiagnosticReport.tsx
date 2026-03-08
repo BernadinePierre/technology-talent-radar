@@ -402,6 +402,23 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
           New Diagnostic
         </Button>
       </div>
+
+      {/* Create Account CTA for guests */}
+      {!user && (
+        <div className="bg-muted/40 rounded-xl border border-border p-6 text-center">
+          <p className="text-sm text-muted-foreground mb-3">
+            Want to save reports and track your progress over time?
+          </p>
+          <Button
+            variant="accent"
+            size="lg"
+            onClick={() => navigate("/auth")}
+          >
+            <UserPlus className="w-4 h-4 mr-1" />
+            Create an account here
+          </Button>
+        </div>
+      )}
     </motion.div>
   );
 };
