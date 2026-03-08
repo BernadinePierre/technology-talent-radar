@@ -129,6 +129,7 @@ const SkillsTabContent = ({
 export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) => {
   const { role, region, experience, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore } = result;
   const [activeTab, setActiveTab] = useState<SkillCategory>("core");
+  const [isPrinting, setIsPrinting] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const reportRef = useRef<HTMLDivElement>(null);
