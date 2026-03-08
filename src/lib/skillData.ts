@@ -660,6 +660,8 @@ export function extractSkillsFromCV(cvText: string): string[] {
 
 export interface DiagnosticResult {
   role: RoleData;
+  region: string;
+  experience: string;
   matchedSkills: { skill: Skill; found: boolean }[];
   overallScore: number;
   coreScore: number;
