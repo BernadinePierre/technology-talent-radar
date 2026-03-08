@@ -640,19 +640,19 @@ export const roles: RoleData[] = [
 ].sort((a, b) => a.label.localeCompare(b.label));
 
 export const ukRegions = [
-  "London",
-  "South East",
-  "South West",
-  "East of England",
-  "West Midlands",
   "East Midlands",
-  "North West",
+  "East of England",
+  "London",
   "North East",
-  "Yorkshire and the Humber",
-  "Scotland",
-  "Wales",
+  "North West",
   "Northern Ireland",
   "Remote",
+  "Scotland",
+  "South East",
+  "South West",
+  "Wales",
+  "West Midlands",
+  "Yorkshire and the Humber",
 ];
 
 export const experienceLevels = [
