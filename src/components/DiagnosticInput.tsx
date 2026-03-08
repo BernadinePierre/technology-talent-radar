@@ -19,23 +19,43 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
 
   const isValid = cvText.trim().length > 50 && role && region && experience;
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [uploading, setUploading] = useState(false);
+
+  const extractTextFromPdf = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pages: string[] = [];
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const text = content.items
+        .map((item: any) => item.str)
+        .join(" ");
+      pages.push(text);
+    }
+
+    return pages.join("\n\n").trim();
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.name.endsWith(".pdf")) {
-      // For PDF files, read as text (basic extraction)
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const text = ev.target?.result as string;
-        // Extract readable text from PDF binary
-        const extracted = text
-          .replace(/[^\x20-\x7E\n\r\t]/g, " ")
-          .replace(/\s{2,}/g, " ")
-          .trim();
-        setCvText(extracted || "PDF loaded — if text extraction was limited, please paste your CV text manually.");
-      };
-      reader.readAsText(file);
+    if (file.name.toLowerCase().endsWith(".pdf")) {
+      setUploading(true);
+      try {
+        const text = await extractTextFromPdf(file);
+        if (text.length > 50) {
+          setCvText(text);
+        } else {
+          setCvText("PDF loaded but text extraction was limited — please paste your CV text manually.");
+        }
+      } catch {
+        setCvText("Could not read PDF — please paste your CV text manually.");
+      } finally {
+        setUploading(false);
+      }
     } else {
       const reader = new FileReader();
       reader.onload = (ev) => {
