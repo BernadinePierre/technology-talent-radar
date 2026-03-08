@@ -128,15 +128,15 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience, isPri
 
       {/* Role + Region + Experience tags */}
       <div className="flex flex-wrap gap-2 mb-5">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-medium">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-foreground text-xs font-medium">
           <Briefcase className="w-3 h-3" />
           {roleLabel}
         </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary/10 text-secondary text-xs font-medium">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-foreground text-xs font-medium">
           <MapPin className="w-3 h-3" />
           {region}
         </span>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-xs font-medium">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-foreground text-xs font-medium">
           <Hourglass className="w-3 h-3" />
           {experience}
         </span>

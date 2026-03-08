@@ -106,7 +106,7 @@ const SkillsTabContent = ({
             key={m.skill.name}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               m.found
-                ? "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200"
+                ? "bg-accent/15 text-accent dark:bg-accent/20 dark:text-accent"
                 : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200"
             }`}
           >
