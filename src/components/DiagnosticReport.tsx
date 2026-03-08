@@ -466,20 +466,22 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         <SupportCard />
       )}
 
-      {/* Actions */}
-      <div className="flex flex-wrap gap-3 justify-center">
-        <Button variant="hero" size="lg" onClick={handleDownload}>
-          <Download className="w-4 h-4 mr-1" />
-          Download Report
-        </Button>
-        <Button variant="outline" size="lg" onClick={onRestart}>
-          <RotateCcw className="w-4 h-4 mr-1" />
-          New Diagnostic
-        </Button>
-      </div>
+      {/* Actions — hidden in PDF */}
+      {!isPrinting && (
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Button variant="hero" size="lg" onClick={handleDownload}>
+            <Download className="w-4 h-4 mr-1" />
+            Download Report
+          </Button>
+          <Button variant="outline" size="lg" onClick={onRestart}>
+            <RotateCcw className="w-4 h-4 mr-1" />
+            New Diagnostic
+          </Button>
+        </div>
+      )}
 
-      {/* Create Account CTA for guests */}
-      {!user && (
+      {/* Create Account CTA for guests — hidden in PDF */}
+      {!user && !isPrinting && (
         <div className="bg-muted/40 rounded-xl border border-border p-6 text-center">
           <p className="text-sm text-muted-foreground mb-3">
             Want to save reports and track your progress over time?
