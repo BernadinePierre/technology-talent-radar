@@ -42,6 +42,22 @@ const regionMultiplier: Record<string, number> = {
   Remote: 1.05,
 };
 
+const experienceYears: Record<string, number> = {
+  "Less than 1 year": 0.5,
+  "1–2 years": 1.5,
+  "2–3 years": 2.5,
+  "3–5 years": 4,
+  "5–10 years": 7,
+  "10+ years": 12,
+};
+
+function getSeniorityPrefix(experience: string): string {
+  const years = experienceYears[experience] ?? 3;
+  if (years <= 2) return "Junior+";
+  if (years >= 5) return "Senior+";
+  return "";
+}
+
 function formatSalary(value: number) {
   return `£${Math.round(value / 1000)}k`;
 }
