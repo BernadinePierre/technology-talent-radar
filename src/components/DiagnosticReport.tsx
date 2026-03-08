@@ -344,9 +344,9 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
             {/* Mini score bars */}
             <div className="w-full mt-6 space-y-3">
               {[
-                { label: "Core", score: coreScore, color: "bg-secondary" },
+                { label: "Core", score: coreScore, color: "bg-accent" },
                 { label: "Supporting", score: supportingScore, color: "bg-accent" },
-                { label: "Differentiators", score: differentiatorScore, color: "bg-primary" },
+                { label: "Differentiators", score: differentiatorScore, color: "bg-accent" },
               ].map((bar) => (
                 <div key={bar.label} className="space-y-1">
                   <div className="flex justify-between text-xs">
