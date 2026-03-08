@@ -72,8 +72,8 @@ const Index = () => {
               className="hidden md:block"
             >
               <img
-                src={heroDashboard}
-                alt="SkillScope diagnostic dashboard showing skill analysis charts and progress indicators"
+                src={heroRadar}
+                alt="Radar chart comparing candidate skills against market demand"
                 className="rounded-xl shadow-2xl border border-white/10"
                 loading="lazy"
               />
