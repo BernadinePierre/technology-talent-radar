@@ -101,7 +101,7 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
             className={`inline-flex items-center gap-2 text-sm text-secondary cursor-pointer hover:underline ${uploading ? "opacity-50 pointer-events-none" : ""}`}
           >
             {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-            {uploading ? "Extracting text…" : "Upload .txt or .pdf file"}
+            {uploading ? "Extracting text…" : "Upload .pdf or .txt file"}
           </label>
           <input
             id="cv-file"
@@ -117,6 +117,7 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
               {cvText.length} characters
             </span>
           )}
+          <span className="text-xs text-muted-foreground italic">Multiple files can be uploaded, but one at a time</span>
         </div>
       </div>
 
