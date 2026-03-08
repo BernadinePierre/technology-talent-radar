@@ -325,7 +325,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         <div>
           {isPrinting && (
             <p className="text-sm font-heading font-bold text-primary tracking-tight mb-2">
-              SkillScope
+              Tech Talent Radar
             </p>
           )}
           <h1 className="text-2xl md:text-3xl font-bold font-heading mb-1">

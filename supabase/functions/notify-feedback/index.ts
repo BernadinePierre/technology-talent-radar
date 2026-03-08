@@ -84,9 +84,9 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "SkillScope <onboarding@resend.dev>",
+        from: "Tech Talent Radar <onboarding@resend.dev>",
         to: [NOTIFY_EMAIL],
-        subject: `[SkillScope] New ${type} feedback`,
+        subject: `[Tech Talent Radar] New ${type} feedback`,
         html: emailHtml,
         attachments: [
           {

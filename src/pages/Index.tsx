@@ -134,7 +134,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-muted-foreground">
-          SkillScope™. Built for career switchers & aspiring technologists.
+          Tech Talent Radar™. Built for career switchers & aspiring technologists.
         </div>
       </footer>
     </div>
