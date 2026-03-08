@@ -68,12 +68,20 @@ const Index = () => {
                 Run Free Report
                 <ArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
               </Button>
-              <a
-                href="#how-it-works"
-                className="block mt-4 text-sm text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors underline underline-offset-4"
-              >
-                How does it work?
-              </a>
+              <div className="flex gap-4 mt-4">
+                <a
+                  href="#how-it-works"
+                  className="text-sm text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors underline underline-offset-4"
+                >
+                  How does it work?
+                </a>
+                <a
+                  href="#why-this-tool"
+                  className="text-sm text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors underline underline-offset-4"
+                >
+                  Why this tool exists
+                </a>
+              </div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
