@@ -63,7 +63,7 @@ function formatSalary(value: number) {
   return `£${Math.round(value / 1000)}k`;
 }
 
-export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: MarketAnalysisProps) => {
+export const MarketAnalysis = ({ roleLabel, roleValue, region, experience, isPrinting = false }: MarketAnalysisProps) => {
   const [url, setUrl] = useState<string>("#");
 
   useEffect(() => {
