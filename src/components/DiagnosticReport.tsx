@@ -509,6 +509,9 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       {/* Create Account CTA for guests — hidden in PDF */}
       {!user && !isPrinting && (
         <div className="bg-muted/40 rounded-xl border border-border p-6 text-center">
+          <p className="text-sm font-medium text-foreground mb-1">
+            We don't store your CV or profile information.
+          </p>
           <p className="text-sm text-muted-foreground mb-3">
             Want to save reports and track your progress over time?
           </p>
