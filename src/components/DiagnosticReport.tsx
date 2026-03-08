@@ -133,6 +133,8 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
   const navigate = useNavigate();
   const { user } = useAuth();
   const reportRef = useRef<HTMLDivElement>(null);
+  const page1Ref = useRef<HTMLDivElement>(null);
+  const page2Ref = useRef<HTMLDivElement>(null);
 
   const gaps = matchedSkills.filter((m) => !m.found);
   const topGaps = [...gaps]
