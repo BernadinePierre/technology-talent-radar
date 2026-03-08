@@ -68,12 +68,20 @@ const Index = () => {
                 Run Free Report
                 <ArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
               </Button>
-              <a
-                href="#how-it-works"
-                className="block mt-4 text-sm text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors underline underline-offset-4"
-              >
-                How does it work?
-              </a>
+              <div className="flex gap-4 mt-4">
+                <a
+                  href="#how-it-works"
+                  className="text-sm text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors underline underline-offset-4"
+                >
+                  How does it work?
+                </a>
+                <a
+                  href="#why-this-tool"
+                  className="text-sm text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors underline underline-offset-4"
+                >
+                  Why this tool exists
+                </a>
+              </div>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -137,7 +145,40 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* Footer */}
+      {/* Why This Tool Exists */}
+      <section id="why-this-tool" className="border-t border-border scroll-mt-20">
+        <div className="container py-20 max-w-2xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 font-heading">
+              Why This Tool Exists
+            </h2>
+            <div className="space-y-5 text-muted-foreground leading-relaxed">
+              <p className="text-lg font-medium text-foreground">The goal is simple: clarity.</p>
+              <ul className="space-y-1 pl-0 list-none">
+                <li>Clarity about what you already have.</li>
+                <li>Clarity about what you're missing.</li>
+                <li>Clarity about where to focus your time.</li>
+              </ul>
+              <p>
+                The tech job market moves fast, and the signals aren't always clear. People say "learn the right skills", but figuring out what those actually are often means digging through countless job descriptions and trying to interpret patterns on your own.
+              </p>
+              <p>I built Tech Talent Radar to make that process simpler.</p>
+              <p>
+                Instead of guessing what employers want, the tool compares your current skills with real market demand and shows where you stand. Not in theory, but based on the skills employers are actually listing in job postings.
+              </p>
+              <p>
+                Tech Talent Radar is here to give people a clearer picture of the gap between where they are and where they want to go, so that they can focus their efforts with intention instead of guesswork.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-muted-foreground">
           Tech Talent Radar™. Built for career switchers & aspiring technologists.
