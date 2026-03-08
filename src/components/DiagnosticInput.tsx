@@ -52,7 +52,7 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
           id="cv-text"
           value={cvText}
           onChange={(e) => setCvText(e.target.value)}
-          placeholder="Paste your CV text here — include your skills, experience, and tools you've worked with…"
+          placeholder="Paste your CV text here (and optionally your LinkedIn profile) — include your skills, experience, and tools you've worked with…"
           className="w-full min-h-[200px] rounded-lg border border-input bg-card p-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y font-body"
           aria-label="CV text input"
         />
