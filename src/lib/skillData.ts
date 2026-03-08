@@ -624,7 +624,8 @@ export const experienceLevels = [
   "1–2 years",
   "2–3 years",
   "3–5 years",
-  "5+ years",
+  "5–10 years",
+  "10+ years",
 ];
 
 export function extractSkillsFromCV(cvText: string): string[] {

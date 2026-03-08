@@ -62,12 +62,12 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
             className="inline-flex items-center gap-2 text-sm text-secondary cursor-pointer hover:underline"
           >
             <Upload className="w-4 h-4" />
-            Upload .txt file
+            Upload .txt or .pdf file
           </label>
           <input
             id="cv-file"
             type="file"
-            accept=".txt"
+            accept=".txt,.pdf"
             onChange={handleFileUpload}
             className="sr-only"
             aria-label="Upload CV file"
