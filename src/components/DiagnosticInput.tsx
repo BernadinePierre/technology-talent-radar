@@ -98,10 +98,10 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
         <div className="flex items-center gap-3">
           <label
             htmlFor="cv-file"
-            className="inline-flex items-center gap-2 text-sm text-secondary cursor-pointer hover:underline"
+            className={`inline-flex items-center gap-2 text-sm text-secondary cursor-pointer hover:underline ${uploading ? "opacity-50 pointer-events-none" : ""}`}
           >
-            <Upload className="w-4 h-4" />
-            Upload .txt or .pdf file
+            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+            {uploading ? "Extracting text…" : "Upload .txt or .pdf file"}
           </label>
           <input
             id="cv-file"
