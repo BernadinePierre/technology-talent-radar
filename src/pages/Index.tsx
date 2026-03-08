@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Target, Map, TrendingUp, ListChecks } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -72,48 +72,48 @@ const Index = () => {
         </div>
       </section>
 
+      {/* What you'll get */}
+      <section className="container py-16 md:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-5xl mx-auto"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-2 font-heading">
+            What you'll get
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-lg mx-auto">
+            A clear diagnostic of your skills against real market demand — completely free.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {features.map((f, i) => (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="group relative bg-card rounded-2xl border border-border p-6 hover:border-secondary/40 hover:shadow-lg hover:shadow-secondary/5 transition-all duration-300"
+              >
+                <div className="w-11 h-11 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+                  <f.icon className="w-5 h-5 text-secondary" />
+                </div>
+                <h3 className="text-base font-semibold font-heading mb-2">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
       {/* Trust strip */}
       <div className="gradient-electric py-3">
         <p className="text-center text-sm text-secondary-foreground/90">
           Market context uses IT Jobs Watch (CC BY-NC-SA 4.0).
         </p>
       </div>
-
-      {/* Preview section */}
-      <section className="container py-16 md:py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto"
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-3 font-heading">
-            What you'll get
-          </h2>
-          <p className="text-center text-muted-foreground mb-10 max-w-lg mx-auto">
-            A clear diagnostic of your skills against real market demand — completely free.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <PreviewCard
-              title="Readiness Score"
-              description="See your overall match percentage and top 5 skill gaps at a glance."
-            />
-            <PreviewCard
-              title="Skills Map"
-              description="Skills grouped into Core, Supporting, and Differentiators with demand levels."
-            />
-            <PreviewCard
-              title="Market Snapshot"
-              description="Salary median, trend direction, and demand signals from IT Jobs Watch."
-            />
-            <PreviewCard
-              title="30-Day Action Plan"
-              description="A short, actionable checklist to close your top gaps fast."
-            />
-          </div>
-        </motion.div>
-      </section>
 
       {/* Footer */}
       <footer className="border-t border-border py-8">
@@ -124,6 +124,29 @@ const Index = () => {
     </div>
   );
 };
+
+const features = [
+  {
+    icon: Target,
+    title: "Readiness Score",
+    description: "See your overall match percentage and top 5 skill gaps at a glance.",
+  },
+  {
+    icon: Map,
+    title: "Skills Map",
+    description: "Skills grouped into Core, Supporting, and Differentiators with demand levels.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Market Snapshot",
+    description: "Salary median, trend direction, and demand signals from IT Jobs Watch.",
+  },
+  {
+    icon: ListChecks,
+    title: "30-Day Action Plan",
+    description: "A short, actionable checklist to close your top gaps fast.",
+  },
+];
 
 const Step = ({ num, text }: { num: number; text: string }) => (
   <div className="flex items-center gap-2">
@@ -136,13 +159,6 @@ const Step = ({ num, text }: { num: number; text: string }) => (
 
 const Chevron = () => (
   <span className="text-muted-foreground mx-1 hidden sm:inline">›</span>
-);
-
-const PreviewCard = ({ title, description }: { title: string; description: string }) => (
-  <div className="bg-card rounded-xl border border-border p-6">
-    <h3 className="text-base font-semibold font-heading mb-2">{title}</h3>
-    <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
-  </div>
 );
 
 export default Index;
