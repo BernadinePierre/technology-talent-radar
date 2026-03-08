@@ -58,14 +58,18 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
       ]);
 
       if (configRes.data && roleRes.data && regionRes.data) {
+        // Determine seniority prefix based on experience
+        const seniorityPrefix = getSeniorityPrefix(experience);
+
         const built = configRes.data.value
+          .replace("{seniority_prefix}", seniorityPrefix)
           .replace("{role_encoded}", roleRes.data.role_encoded)
           .replace("{region_encoded}", regionRes.data.region_encoded);
         setUrl(built);
       }
     }
     buildUrl();
-  }, [roleLabel, region]);
+  }, [roleLabel, region, experience]);
 
   const baseSalary = salaryBands[experience] ?? salaryBands["2–3 years"];
   const multiplier = regionMultiplier[region] ?? 1.0;
