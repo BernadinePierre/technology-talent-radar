@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FileText, Target, BarChart3, ArrowRight, ShieldCheck } from "lucide-react";
 import heroRadar from "@/assets/hero-radar.png";
+import logo from "@/assets/logo.png";
 
 const steps = [
   {
