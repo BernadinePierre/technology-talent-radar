@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
+import { SupportCard } from "@/components/SupportCard";
 import { supabase } from "@/integrations/supabase/client";
 
 interface DiagnosticReportProps {
