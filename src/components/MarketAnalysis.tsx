@@ -111,7 +111,7 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Median Salary</p>
               <Tooltip>
-                <TooltipTrigger asChild><Info className="w-3 h-3 text-muted-foreground cursor-help" /></TooltipTrigger>
+                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
                 <TooltipContent><p className="text-xs max-w-48">Estimated median annual salary for this role, region, and experience level.</p></TooltipContent>
               </Tooltip>
             </div>
@@ -121,7 +121,7 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Open Roles</p>
               <Tooltip>
-                <TooltipTrigger asChild><Info className="w-3 h-3 text-muted-foreground cursor-help" /></TooltipTrigger>
+                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
                 <TooltipContent><p className="text-xs max-w-48">Approximate number of live job postings matching this role and region.</p></TooltipContent>
               </Tooltip>
             </div>
@@ -131,7 +131,7 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Demand Trend</p>
               <Tooltip>
-                <TooltipTrigger asChild><Info className="w-3 h-3 text-muted-foreground cursor-help" /></TooltipTrigger>
+                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
                 <TooltipContent><p className="text-xs max-w-48">Year-over-year change in job postings for this role.</p></TooltipContent>
               </Tooltip>
             </div>
@@ -141,7 +141,7 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Market Share</p>
               <Tooltip>
-                <TooltipTrigger asChild><Info className="w-3 h-3 text-muted-foreground cursor-help" /></TooltipTrigger>
+                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
                 <TooltipContent><p className="text-xs max-w-48">Percentage of all UK tech job postings represented by this role.</p></TooltipContent>
               </Tooltip>
             </div>

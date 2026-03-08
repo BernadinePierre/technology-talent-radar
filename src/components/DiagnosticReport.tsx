@@ -133,45 +133,63 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
   const navigate = useNavigate();
   const { user } = useAuth();
   const reportRef = useRef<HTMLDivElement>(null);
+  const page1Ref = useRef<HTMLDivElement>(null);
+  const page2Ref = useRef<HTMLDivElement>(null);
 
   const gaps = matchedSkills.filter((m) => !m.found);
   const topGaps = [...gaps]
     .sort((a, b) => b.skill.demandLevel - a.skill.demandLevel)
     .slice(0, 5);
 
-  const handleDownload = async () => {
-    if (!reportRef.current) return;
-    try {
-      setIsPrinting(true);
-      // Wait for React to re-render with print layout
-      await new Promise((r) => setTimeout(r, 100));
+  const DONATE_URL = "https://donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00";
 
-      const canvas = await html2canvas(reportRef.current, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: null,
-      });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      let heightLeft = pdfHeight;
-      let position = 0;
-      
+  const renderPageToPdf = async (element: HTMLElement, pdf: jsPDF, isFirstPage: boolean) => {
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: null,
+    });
+    const imgData = canvas.toDataURL("image/png");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    if (!isFirstPage) pdf.addPage();
+
+    let heightLeft = pdfHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+    heightLeft -= pdf.internal.pageSize.getHeight();
+
+    while (heightLeft > 0) {
+      position -= pdf.internal.pageSize.getHeight();
+      pdf.addPage();
       pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
       heightLeft -= pdf.internal.pageSize.getHeight();
-      
-      while (heightLeft > 0) {
-        position -= pdf.internal.pageSize.getHeight();
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-        heightLeft -= pdf.internal.pageSize.getHeight();
-      }
-      
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!page1Ref.current || !page2Ref.current) return;
+    try {
+      setIsPrinting(true);
+      await new Promise((r) => setTimeout(r, 150));
+
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      // Page 1: Scores + Skills
+      await renderPageToPdf(page1Ref.current, pdf, true);
+
+      // Page 2: Market Analysis onward
+      await renderPageToPdf(page2Ref.current, pdf, false);
+
+      // Add clickable donate link on the last page
+      const lastPageHeight = pdf.internal.pageSize.getHeight();
+      const lastPageWidth = pdf.internal.pageSize.getWidth();
+      pdf.link(lastPageWidth / 2 - 30, lastPageHeight - 30, 60, 10, { url: DONATE_URL });
+
       pdf.save(`skillscope-${role.value}.pdf`);
     } catch {
-      // Fallback to text
       const matched = matchedSkills.filter((m) => m.found);
       const lines = [
         `SkillScope Readiness Report — ${role.label}`,
@@ -183,6 +201,8 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         "",
         "SKILL GAPS:",
         ...gaps.map((m) => `  ✗ ${m.skill.name} (${m.skill.category}, demand: ${m.skill.demandLevel}%)`),
+        "",
+        `Donate: ${DONATE_URL}`,
       ];
       const blob = new Blob([lines.join("\n")], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
@@ -298,173 +318,173 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       transition={{ duration: 0.4 }}
       ref={reportRef}
     >
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-heading mb-1">
-          Readiness Report
-        </h1>
-        <p className="text-muted-foreground">
-          Target role: <span className="font-semibold text-foreground">{role.label}</span>
-        </p>
-      </div>
-
-      {/* Top Row: Gauge + Gaps */}
-      <div className="grid md:grid-cols-5 gap-6">
-        {/* Readiness Score Card */}
-        <div className="md:col-span-2 bg-card rounded-xl border border-border p-6 flex flex-col items-center">
-          <h2 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
-            Readiness Score
-          </h2>
-          <ReadinessGauge score={overallScore} />
-
-          {/* Mini score bars */}
-          <div className="w-full mt-6 space-y-3">
-            {[
-              { label: "Core", score: coreScore, color: "bg-secondary" },
-              { label: "Supporting", score: supportingScore, color: "bg-accent" },
-              { label: "Differentiators", score: differentiatorScore, color: "bg-primary" },
-            ].map((bar) => (
-              <div key={bar.label} className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span className="font-medium">{bar.label}</span>
-                  <span className="text-muted-foreground font-mono">{bar.score}%</span>
-                </div>
-                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                  <motion.div
-                    className={`h-full rounded-full ${bar.color}`}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${bar.score}%` }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="text-sm text-muted-foreground text-center mt-5 leading-relaxed">
-            {scoreSummary}
+      {/* Page 1: Scores + Skills */}
+      <div ref={page1Ref} className="space-y-6">
+        {/* Header */}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold font-heading mb-1">
+            Readiness Report
+          </h1>
+          <p className="text-muted-foreground">
+            Target role: <span className="font-semibold text-foreground">{role.label}</span>
           </p>
         </div>
 
-        {/* Top Skill Gaps + Skills Map */}
-        <div className="md:col-span-3 space-y-6">
-          {/* Top Skill Gaps */}
-          {topGaps.length > 0 && (
-            <div className="bg-card rounded-xl border border-border p-6">
-              <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-3 uppercase tracking-wider">
-                Top Skill Gaps
-              </h3>
-              <ol className="space-y-2">
-                {topGaps.map((g, i) => (
-                  <li
-                    key={g.skill.name}
-                    className="flex items-center gap-3 py-1.5 px-3 rounded-lg bg-muted/40"
-                  >
-                    <span className="w-5 h-5 rounded-full bg-secondary/20 text-secondary text-xs font-bold flex items-center justify-center shrink-0">
-                      {i + 1}
-                    </span>
-                    <span className="text-sm font-medium flex-1">{g.skill.name}</span>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      {g.skill.demandLevel}% demand
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
+        {/* Top Row: Gauge + Gaps */}
+        <div className="grid md:grid-cols-5 gap-6">
+          {/* Readiness Score Card */}
+          <div className="md:col-span-2 bg-card rounded-xl border border-border p-6 flex flex-col items-center">
+            <h2 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
+              Readiness Score
+            </h2>
+            <ReadinessGauge score={overallScore} />
 
-          {/* Skills Map */}
-          <div className="bg-card rounded-xl border border-border p-6">
-            <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
-              Skills Map
-            </h3>
-            {isPrinting ? (
-              /* Print layout: show all categories inline */
-              <div className="space-y-5">
-                {(["core", "supporting", "differentiator"] as SkillCategory[]).map((cat) => (
-                  <div key={cat}>
-                    <h4 className="text-xs font-semibold mb-2">{categoryMeta[cat].label}</h4>
-                    <SkillsTabContent skills={matchedSkills} category={cat} />
+            {/* Mini score bars */}
+            <div className="w-full mt-6 space-y-3">
+              {[
+                { label: "Core", score: coreScore, color: "bg-secondary" },
+                { label: "Supporting", score: supportingScore, color: "bg-accent" },
+                { label: "Differentiators", score: differentiatorScore, color: "bg-primary" },
+              ].map((bar) => (
+                <div key={bar.label} className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className="font-medium">{bar.label}</span>
+                    <span className="text-muted-foreground font-mono">{bar.score}%</span>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <>
-                {/* Tabs */}
-                <div className="flex gap-1 mb-4 bg-muted/50 rounded-lg p-1">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setActiveTab(tab.key)}
-                      className={`flex-1 text-xs font-medium px-3 py-2 rounded-md transition-all ${
-                        activeTab === tab.key
-                          ? "bg-card text-foreground shadow-sm"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                    <motion.div
+                      className={`h-full rounded-full ${bar.color}`}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${bar.score}%` }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground text-center mt-5 leading-relaxed">
+              {scoreSummary}
+            </p>
+          </div>
+
+          {/* Top Skill Gaps + Skills Map */}
+          <div className="md:col-span-3 space-y-6">
+            {/* Top Skill Gaps */}
+            {topGaps.length > 0 && (
+              <div className="bg-card rounded-xl border border-border p-6">
+                <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-3 uppercase tracking-wider">
+                  Top Skill Gaps
+                </h3>
+                <ol className="space-y-2">
+                  {topGaps.map((g, i) => (
+                    <li
+                      key={g.skill.name}
+                      className="flex items-center gap-3 py-1.5 px-3 rounded-lg bg-muted/40"
                     >
-                      {tab.label}
-                    </button>
+                      <span className="w-5 h-5 rounded-full bg-secondary/20 text-secondary text-xs font-bold flex items-center justify-center shrink-0">
+                        {i + 1}
+                      </span>
+                      <span className="text-sm font-medium flex-1">{g.skill.name}</span>
+                      <span className="text-xs text-muted-foreground font-mono">
+                        {g.skill.demandLevel}% demand
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* Skills Map */}
+            <div className="bg-card rounded-xl border border-border p-6">
+              <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
+                Skills Map
+              </h3>
+              {isPrinting ? (
+                <div className="space-y-5">
+                  {(["core", "supporting", "differentiator"] as SkillCategory[]).map((cat) => (
+                    <div key={cat}>
+                      <h4 className="text-xs font-semibold mb-2">{categoryMeta[cat].label}</h4>
+                      <SkillsTabContent skills={matchedSkills} category={cat} />
+                    </div>
                   ))}
                 </div>
-                <SkillsTabContent skills={matchedSkills} category={activeTab} />
-              </>
-            )}
+              ) : (
+                <>
+                  <div className="flex gap-1 mb-4 bg-muted/50 rounded-lg p-1">
+                    {tabs.map((tab) => (
+                      <button
+                        key={tab.key}
+                        onClick={() => setActiveTab(tab.key)}
+                        className={`flex-1 text-xs font-medium px-3 py-2 rounded-md transition-all ${
+                          activeTab === tab.key
+                            ? "bg-card text-foreground shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                  <SkillsTabContent skills={matchedSkills} category={activeTab} />
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Page 2: Market Analysis onward */}
+      <div ref={page2Ref} className="space-y-6">
+        {/* Market Analysis */}
+        <MarketAnalysis
+          roleLabel={role.label}
+          roleValue={role.value}
+          region={region}
+          experience={experience}
+        />
 
-      {/* Market Analysis */}
-      <MarketAnalysis
-        roleLabel={role.label}
-        roleValue={role.value}
-        region={region}
-        experience={experience}
-      />
-
-      {/* 30-Day Action Plan */}
-      {actionItems.length > 0 && (
-        <div className="bg-card rounded-xl border border-border p-6">
-          <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
-            30-Day Action Plan
-          </h3>
-          <div className="space-y-3">
-            {actionItems.map((action, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 py-2 px-3 rounded-lg bg-muted/30"
-              >
-                <TrendingUp className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                <span className="text-sm">{action}</span>
-              </div>
-            ))}
+        {/* 30-Day Action Plan */}
+        {actionItems.length > 0 && (
+          <div className="bg-card rounded-xl border border-border p-6">
+            <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
+              30-Day Action Plan
+            </h3>
+            <div className="space-y-3">
+              {actionItems.map((action, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 py-2 px-3 rounded-lg bg-muted/30"
+                >
+                  <TrendingUp className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+                  <span className="text-sm">{action}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Attribution */}
-      <p className="text-center text-[11px] text-muted-foreground">
-        Labour market data derived from IT Jobs Watch (CC BY-NC-SC 4.0).
-      </p>
+        {/* Attribution */}
+        <p className="text-center text-[11px] text-muted-foreground">
+          Labour market data derived from IT Jobs Watch (CC BY-NC-SC 4.0).
+        </p>
 
-      {/* Support */}
-      {isPrinting ? (
-        <div className="bg-card rounded-xl border border-border p-6 text-center">
-          <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-1">
-            Support continued development
-          </h3>
-          <p className="text-xs text-muted-foreground mb-2">
-            Keeps the tool free for everyone.
-          </p>
-          <a
-            href="https://donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00"
-            className="text-sm font-semibold text-primary underline"
-          >
-            donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00
-          </a>
-        </div>
-      ) : (
-        <SupportCard />
-      )}
+        {/* Support */}
+        {isPrinting ? (
+          <div className="bg-card rounded-xl border border-border p-6 text-center">
+            <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-1">
+              Support continued development
+            </h3>
+            <p className="text-xs text-muted-foreground mb-2">
+              Keeps the tool free for everyone. Click the link below to donate.
+            </p>
+            <p className="text-sm font-semibold text-primary underline">
+              {DONATE_URL}
+            </p>
+          </div>
+        ) : (
+          <SupportCard />
+        )}
+      </div>
 
       {/* Actions — hidden in PDF */}
       {!isPrinting && (
