@@ -301,10 +301,10 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
 
   const scoreSummary =
     overallScore >= 70
-      ? `Great news — you're well-positioned for this role! Your ${topStrengthCategory} are a strong match. To truly stand out, focus on sharpening your ${weakestCategory}. Check the action plan below for your next steps.`
+      ? `Great news. You're well-positioned for this role! Your ${topStrengthCategory} are a strong match. To truly stand out, focus on sharpening your ${weakestCategory}. Explore the tabs of the skills map and see the action plan below to accelerate your progress.`
       : overallScore >= 40
-      ? `You're building a solid foundation — your ${topStrengthCategory} show real promise. Closing the gaps in ${weakestCategory} will make a big difference. See the action plan below to accelerate your progress.`
-      : `Every expert started here — you've taken the first step! Focus on building your ${weakestCategory} to gain momentum. The action plan below maps out exactly where to begin.`;
+      ? `You're building a solid foundation. Your ${topStrengthCategory} show real promise. Closing the gaps in ${weakestCategory} will make a big difference. Explore the tabs of the skills map and see the action plan below to accelerate your progress.`
+      : `Every expert started here. You've taken the first step! Focus on building your ${weakestCategory} to gain momentum. Explore the tabs of the skills map and see the action plan below to accelerate your progress.`;
 
   const tabs: { key: SkillCategory; label: string }[] = [
     { key: "core", label: "Core Skills" },
