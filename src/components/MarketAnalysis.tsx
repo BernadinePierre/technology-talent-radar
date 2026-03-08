@@ -56,8 +56,10 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
 
   const url = buildITJobsWatchUrl(roleLabel, region);
 
-  // Simulated demand trend
+  // Simulated stats
   const demandChange = Math.round((multiplier - 0.9) * 100 + 8);
+  const openRoles = Math.round(800 + multiplier * 400 + (salaryBands[experience]?.median ?? 45000) / 100);
+  const marketShare = ((multiplier * 3.2 + demandChange * 0.05)).toFixed(1);
 
   return (
     <motion.div
