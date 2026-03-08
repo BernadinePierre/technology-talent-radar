@@ -93,7 +93,7 @@ const Index = () => {
       </section>
 
       {/* How it works */}
-      <section className="container py-20 pb-12">
+      <section id="how-it-works" className="container py-20 pb-12 scroll-mt-20">
         <motion.h2
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
