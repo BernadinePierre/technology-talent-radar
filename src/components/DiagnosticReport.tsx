@@ -377,23 +377,37 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
             <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
               Skills Map
             </h3>
-            {/* Tabs */}
-            <div className="flex gap-1 mb-4 bg-muted/50 rounded-lg p-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`flex-1 text-xs font-medium px-3 py-2 rounded-md transition-all ${
-                    activeTab === tab.key
-                      ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-            <SkillsTabContent skills={matchedSkills} category={activeTab} />
+            {isPrinting ? (
+              /* Print layout: show all categories inline */
+              <div className="space-y-5">
+                {(["core", "supporting", "differentiator"] as SkillCategory[]).map((cat) => (
+                  <div key={cat}>
+                    <h4 className="text-xs font-semibold mb-2">{categoryMeta[cat].label}</h4>
+                    <SkillsTabContent skills={matchedSkills} category={cat} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Tabs */}
+                <div className="flex gap-1 mb-4 bg-muted/50 rounded-lg p-1">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`flex-1 text-xs font-medium px-3 py-2 rounded-md transition-all ${
+                        activeTab === tab.key
+                          ? "bg-card text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+                <SkillsTabContent skills={matchedSkills} category={activeTab} />
+              </>
+            )}
           </div>
         </div>
       </div>
