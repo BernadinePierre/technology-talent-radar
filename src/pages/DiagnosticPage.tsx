@@ -36,7 +36,7 @@ const DiagnosticPage = () => {
       setResult(diagnostic);
       setStep("results");
 
-      // Save to DB if logged in
+      // Save to DB
       if (user) {
         const { error } = await supabase.from("diagnostic_results").insert({
           user_id: user.id,
@@ -53,6 +53,18 @@ const DiagnosticPage = () => {
         });
         if (error) toast.error("Failed to save result");
         else toast.success("Result saved to your account");
+      } else {
+        // Capture anonymous diagnostic for analytics
+        await supabase.from("anonymous_diagnostic_results").insert({
+          role_value: diagnostic.role.value,
+          role_label: diagnostic.role.label,
+          region: diagnostic.region,
+          experience: diagnostic.experience,
+          overall_score: diagnostic.overallScore,
+          core_score: diagnostic.coreScore,
+          supporting_score: diagnostic.supportingScore,
+          differentiator_score: diagnostic.differentiatorScore,
+        });
       }
     }, 2000);
   };
