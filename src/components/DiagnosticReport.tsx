@@ -40,12 +40,7 @@ const categoryMeta: Record<SkillCategory, { label: string; description: string; 
 const ReadinessGauge = ({ score }: { score: number }) => {
   const stroke = 12;
 
-  const gaugeColor =
-    score >= 70
-      ? "hsl(var(--accent))"
-      : score >= 40
-      ? "hsl(var(--secondary))"
-      : "hsl(var(--destructive))";
+  const gaugeColor = "hsl(var(--accent))";
 
   const fraction = score / 100;
 
