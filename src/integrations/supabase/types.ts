@@ -110,6 +110,27 @@ export type Database = {
         }
         Relationships: []
       }
+      job_roles: {
+        Row: {
+          id: number
+          role_encoded: string
+          role_key: string
+          role_name: string
+        }
+        Insert: {
+          id: number
+          role_encoded: string
+          role_key: string
+          role_name: string
+        }
+        Update: {
+          id?: number
+          role_encoded?: string
+          role_key?: string
+          role_name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
