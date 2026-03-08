@@ -42,6 +42,22 @@ const regionMultiplier: Record<string, number> = {
   Remote: 1.05,
 };
 
+const experienceYears: Record<string, number> = {
+  "Less than 1 year": 0.5,
+  "1–2 years": 1.5,
+  "2–3 years": 2.5,
+  "3–5 years": 4,
+  "5–10 years": 7,
+  "10+ years": 12,
+};
+
+function getSeniorityPrefix(experience: string): string {
+  const years = experienceYears[experience] ?? 3;
+  if (years <= 2) return "Junior+";
+  if (years >= 5) return "Senior+";
+  return "";
+}
+
 function formatSalary(value: number) {
   return `£${Math.round(value / 1000)}k`;
 }
@@ -58,14 +74,18 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
       ]);
 
       if (configRes.data && roleRes.data && regionRes.data) {
+        // Determine seniority prefix based on experience
+        const seniorityPrefix = getSeniorityPrefix(experience);
+
         const built = configRes.data.value
+          .replace("{seniority_prefix}", seniorityPrefix)
           .replace("{role_encoded}", roleRes.data.role_encoded)
           .replace("{region_encoded}", regionRes.data.region_encoded);
         setUrl(built);
       }
     }
     buildUrl();
-  }, [roleLabel, region]);
+  }, [roleLabel, region, experience]);
 
   const baseSalary = salaryBands[experience] ?? salaryBands["2–3 years"];
   const multiplier = regionMultiplier[region] ?? 1.0;
