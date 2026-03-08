@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DiagnosticResult, SkillCategory } from "@/lib/skillData";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, RotateCcw, Download, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DiagnosticReportProps {
   result: DiagnosticResult;
@@ -148,20 +149,35 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
     URL.revokeObjectURL(url);
   };
 
-  // Generate action items from top gaps
-  const actionItems = topGaps.slice(0, 3).map((g) => {
-    const actions: Record<string, string> = {
-      SQL: "Complete an SQL practice project on real datasets",
-      Python: "Build a Python portfolio project (e.g., data pipeline)",
-      "CI/CD": "Learn CI/CD with an online course or hands-on lab",
-      Docker: "Containerise a personal project with Docker",
-      Kubernetes: "Set up a local K8s cluster and deploy an app",
-      AWS: "Earn an AWS Cloud Practitioner certification",
-      Terraform: "Write Terraform configs for a sample infrastructure",
-      "Machine Learning": "Complete a Kaggle competition or ML course",
+  // Fetch action items from DB templates
+  const [actionItems, setActionItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      const skillNames = topGaps.slice(0, 3).map((g) => g.skill.name);
+      if (skillNames.length === 0) return;
+
+      const { data } = await supabase
+        .from("action_plan_templates")
+        .select("skill_name, action_text")
+        .in("skill_name", skillNames);
+
+      if (data && data.length > 0) {
+        // Pick one template per skill, in gap order
+        const items: string[] = [];
+        for (const name of skillNames) {
+          const match = data.find((t) => t.skill_name === name);
+          if (match) items.push(match.action_text);
+          else items.push(`Study ${name} through courses or hands-on projects`);
+        }
+        setActionItems(items);
+      } else {
+        // Fallback
+        setActionItems(skillNames.map((n) => `Study ${n} through courses or hands-on projects`));
+      }
     };
-    return actions[g.skill.name] || `Study ${g.skill.name} through courses or hands-on projects`;
-  });
+    fetchTemplates();
+  }, [topGaps.map((g) => g.skill.name).join(",")]);
 
 
 
