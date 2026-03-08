@@ -215,9 +215,6 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
             Readiness Score
           </h2>
           <ReadinessGauge score={overallScore} />
-          <p className="text-sm text-muted-foreground text-center mt-4 leading-relaxed">
-            {scoreSummary}
-          </p>
 
           {/* Mini score bars */}
           <div className="w-full mt-6 space-y-3">
