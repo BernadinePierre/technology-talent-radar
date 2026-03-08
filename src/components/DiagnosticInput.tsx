@@ -117,6 +117,7 @@ export const DiagnosticInput = ({ onSubmit }: DiagnosticInputProps) => {
               {cvText.length} characters
             </span>
           )}
+          <span className="text-xs text-muted-foreground italic">Multiple files can be uploaded, but one at a time</span>
         </div>
       </div>
 
