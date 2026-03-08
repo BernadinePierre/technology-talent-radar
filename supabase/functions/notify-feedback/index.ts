@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
 
     const emailHtml = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #333;">New Feedback on SkillScope</h2>
+        <h2 style="color: #333;">New Feedback on Tech Talent Radar</h2>
         <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
           <tr><td style="padding: 8px; font-weight: bold; color: #555;">Type</td><td style="padding: 8px;">${type}</td></tr>
           <tr><td style="padding: 8px; font-weight: bold; color: #555;">From</td><td style="padding: 8px;">${userName}</td></tr>
