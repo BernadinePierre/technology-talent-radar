@@ -433,58 +433,58 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         </div>
       </div>
 
-      {/* Market Analysis */}
-      <MarketAnalysis
-        roleLabel={role.label}
-        roleValue={role.value}
-        region={region}
-        experience={experience}
-      />
+      {/* Page 2: Market Analysis onward */}
+      <div ref={page2Ref} className="space-y-6">
+        {/* Market Analysis */}
+        <MarketAnalysis
+          roleLabel={role.label}
+          roleValue={role.value}
+          region={region}
+          experience={experience}
+        />
 
-      {/* 30-Day Action Plan */}
-      {actionItems.length > 0 && (
-        <div className="bg-card rounded-xl border border-border p-6">
-          <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
-            30-Day Action Plan
-          </h3>
-          <div className="space-y-3">
-            {actionItems.map((action, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 py-2 px-3 rounded-lg bg-muted/30"
-              >
-                <TrendingUp className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                <span className="text-sm">{action}</span>
-              </div>
-            ))}
+        {/* 30-Day Action Plan */}
+        {actionItems.length > 0 && (
+          <div className="bg-card rounded-xl border border-border p-6">
+            <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
+              30-Day Action Plan
+            </h3>
+            <div className="space-y-3">
+              {actionItems.map((action, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 py-2 px-3 rounded-lg bg-muted/30"
+                >
+                  <TrendingUp className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+                  <span className="text-sm">{action}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Attribution */}
-      <p className="text-center text-[11px] text-muted-foreground">
-        Labour market data derived from IT Jobs Watch (CC BY-NC-SC 4.0).
-      </p>
+        {/* Attribution */}
+        <p className="text-center text-[11px] text-muted-foreground">
+          Labour market data derived from IT Jobs Watch (CC BY-NC-SC 4.0).
+        </p>
 
-      {/* Support */}
-      {isPrinting ? (
-        <div className="bg-card rounded-xl border border-border p-6 text-center">
-          <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-1">
-            Support continued development
-          </h3>
-          <p className="text-xs text-muted-foreground mb-2">
-            Keeps the tool free for everyone.
-          </p>
-          <a
-            href="https://donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00"
-            className="text-sm font-semibold text-primary underline"
-          >
-            donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00
-          </a>
-        </div>
-      ) : (
-        <SupportCard />
-      )}
+        {/* Support */}
+        {isPrinting ? (
+          <div className="bg-card rounded-xl border border-border p-6 text-center">
+            <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-1">
+              Support continued development
+            </h3>
+            <p className="text-xs text-muted-foreground mb-2">
+              Keeps the tool free for everyone. Click the link below to donate.
+            </p>
+            <p className="text-sm font-semibold text-primary underline">
+              {DONATE_URL}
+            </p>
+          </div>
+        ) : (
+          <SupportCard />
+        )}
+      </div>
 
       {/* Actions — hidden in PDF */}
       {!isPrinting && (
