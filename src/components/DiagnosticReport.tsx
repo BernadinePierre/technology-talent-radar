@@ -38,10 +38,7 @@ const categoryMeta: Record<SkillCategory, { label: string; description: string; 
 
 /* ── Gauge ── */
 const ReadinessGauge = ({ score }: { score: number }) => {
-  const radius = 70;
   const stroke = 12;
-  const circumference = Math.PI * radius; // half-circle
-  const offset = circumference - (score / 100) * circumference;
 
   const gaugeColor =
     score >= 70
@@ -49,6 +46,8 @@ const ReadinessGauge = ({ score }: { score: number }) => {
       : score >= 40
       ? "hsl(var(--secondary))"
       : "hsl(var(--destructive))";
+
+  const fraction = score / 100;
 
   return (
     <div className="flex flex-col items-center">
@@ -60,6 +59,7 @@ const ReadinessGauge = ({ score }: { score: number }) => {
           stroke="hsl(var(--muted))"
           strokeWidth={stroke}
           strokeLinecap="round"
+          pathLength={1}
         />
         {/* Score arc */}
         {score > 0 && (
@@ -69,9 +69,10 @@ const ReadinessGauge = ({ score }: { score: number }) => {
             stroke={gaugeColor}
             strokeWidth={stroke}
             strokeLinecap="round"
-            strokeDasharray={`${circumference} ${circumference}`}
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset: offset }}
+            pathLength={1}
+            strokeDasharray="1 1"
+            initial={{ strokeDashoffset: 1 }}
+            animate={{ strokeDashoffset: 1 - fraction }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           />
         )}
