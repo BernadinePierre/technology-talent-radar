@@ -40,12 +40,7 @@ const categoryMeta: Record<SkillCategory, { label: string; description: string; 
 const ReadinessGauge = ({ score }: { score: number }) => {
   const stroke = 12;
 
-  const gaugeColor =
-    score >= 70
-      ? "hsl(var(--accent))"
-      : score >= 40
-      ? "hsl(var(--secondary))"
-      : "hsl(var(--destructive))";
+  const gaugeColor = "hsl(var(--accent))";
 
   const fraction = score / 100;
 
@@ -111,7 +106,7 @@ const SkillsTabContent = ({
             key={m.skill.name}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               m.found
-                ? "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200"
+                ? "bg-accent/15 text-accent dark:bg-accent/20 dark:text-accent"
                 : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200"
             }`}
           >
@@ -349,9 +344,9 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
             {/* Mini score bars */}
             <div className="w-full mt-6 space-y-3">
               {[
-                { label: "Core", score: coreScore, color: "bg-secondary" },
+                { label: "Core", score: coreScore, color: "bg-accent" },
                 { label: "Supporting", score: supportingScore, color: "bg-accent" },
-                { label: "Differentiators", score: differentiatorScore, color: "bg-primary" },
+                { label: "Differentiators", score: differentiatorScore, color: "bg-accent" },
               ].map((bar) => (
                 <div key={bar.label} className="space-y-1">
                   <div className="flex justify-between text-xs">
