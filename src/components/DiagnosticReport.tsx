@@ -6,6 +6,11 @@ import { motion } from "framer-motion";
 import { MarketAnalysis } from "@/components/MarketAnalysis";
 import { SupportCard } from "@/components/SupportCard";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
+import { useRef } from "react";
 
 interface DiagnosticReportProps {
   result: DiagnosticResult;
