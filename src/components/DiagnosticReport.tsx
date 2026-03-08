@@ -348,6 +348,9 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         Labour market data derived from IT Jobs Watch (CC BY-NC-SC 4.0).
       </p>
 
+      {/* Support */}
+      <SupportCard />
+
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
         <Button variant="hero" size="lg" onClick={handleDownload}>
