@@ -461,6 +461,9 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
                 </div>
               ))}
             </div>
+            <p className="text-xs text-muted-foreground italic mt-4 text-center">
+              Don't forget to update your CV and profile with these newly applied skills as you go!
+            </p>
           </div>
         )}
 
