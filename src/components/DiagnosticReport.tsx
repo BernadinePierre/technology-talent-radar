@@ -194,19 +194,18 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
 
   useEffect(() => {
     const fetchTemplates = async () => {
-      const gapSkills = topGaps.slice(0, 3);
+      const gapSkills = topGaps.slice(0, 5);
       if (gapSkills.length === 0) return;
 
       const { data } = await supabase
         .from("action_plan_templates")
-        .select("category, template");
+        .select("id, category, template, gap_category_priority");
 
       if (!data || data.length === 0) {
         setActionItems(gapSkills.map((g) => `Study ${g.skill.name} through courses or hands-on projects`));
         return;
       }
 
-      // Determine gap level based on demand
       const getGapLevel = (demand: number): "low" | "medium" | "high" =>
         demand >= 70 ? "high" : demand >= 40 ? "medium" : "low";
 
@@ -217,25 +216,39 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       };
 
       const usedCategories = new Set<string>();
+      const usedTemplateIds = new Set<string>();
       const items: string[] = [];
 
       for (const gap of gapSkills) {
         const level = getGapLevel(gap.skill.demandLevel);
         const preferred = categoryOrder[level] || categoryOrder.medium;
-        // Pick first category not yet used
+
+        // Pick first category not yet used for rotation
         const cat = preferred.find((c) => !usedCategories.has(c)) || preferred[0];
         usedCategories.add(cat);
 
-        const candidates = data.filter((t) => t.category === cat);
-        const pick = candidates.length > 0
-          ? candidates[Math.floor(Math.random() * candidates.length)]
-          : null;
-
-        items.push(
-          pick
-            ? pick.template.replace(/\{skill\}/g, gap.skill.name)
-            : `Study ${gap.skill.name} through courses or hands-on projects`
+        // Filter candidates by category, exclude already-used template IDs
+        const candidates = data.filter(
+          (t) => t.category === cat && !usedTemplateIds.has(t.id)
         );
+
+        if (candidates.length > 0) {
+          const pick = candidates[Math.floor(Math.random() * candidates.length)];
+          usedTemplateIds.add(pick.id);
+          items.push(pick.template.replace(/\{skill\}/g, gap.skill.name));
+        } else {
+          // Fallback: try any unused template matching the gap level priority
+          const fallback = data.filter(
+            (t) => t.gap_category_priority === level && !usedTemplateIds.has(t.id)
+          );
+          if (fallback.length > 0) {
+            const pick = fallback[Math.floor(Math.random() * fallback.length)];
+            usedTemplateIds.add(pick.id);
+            items.push(pick.template.replace(/\{skill\}/g, gap.skill.name));
+          } else {
+            items.push(`Study ${gap.skill.name} through courses or hands-on projects`);
+          }
+        }
       }
 
       setActionItems(items);
