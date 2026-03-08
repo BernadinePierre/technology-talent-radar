@@ -21,6 +21,8 @@ const DiagnosticPage = () => {
 
   const handleSubmit = (data: DiagnosticFormData) => {
     setStep("processing");
+
+    // Simulate processing
     setTimeout(() => {
       const cvSkills = extractSkillsFromCV(data.cvText);
       const diagnostic = generateDiagnostic(cvSkills, data.role);
@@ -43,16 +45,27 @@ const DiagnosticPage = () => {
         </div>
       </nav>
 
-      <div className="container py-8 md:py-12 max-w-4xl">
+      <div className="container py-8 md:py-12 max-w-3xl">
         <AnimatePresence mode="wait">
           {step === "input" && (
-            <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+            <motion.div
+              key="input"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
               <DiagnosticInput onSubmit={handleSubmit} />
             </motion.div>
           )}
 
           {step === "processing" && (
-            <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-24 gap-6">
+            <motion.div
+              key="processing"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col items-center justify-center py-24 gap-6"
+            >
               <div className="w-16 h-16 rounded-full border-4 border-secondary border-t-transparent animate-spin" />
               <div className="text-center">
                 <h2 className="text-xl font-semibold font-heading mb-2">Analysing your CV</h2>
@@ -64,7 +77,11 @@ const DiagnosticPage = () => {
           )}
 
           {step === "results" && result && (
-            <motion.div key="results" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <motion.div
+              key="results"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
               <DiagnosticReport
                 result={result}
                 onRestart={() => {
