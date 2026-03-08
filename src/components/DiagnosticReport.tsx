@@ -141,39 +141,55 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
     .sort((a, b) => b.skill.demandLevel - a.skill.demandLevel)
     .slice(0, 5);
 
-  const handleDownload = async () => {
-    if (!reportRef.current) return;
-    try {
-      setIsPrinting(true);
-      // Wait for React to re-render with print layout
-      await new Promise((r) => setTimeout(r, 100));
+  const DONATE_URL = "https://donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00";
 
-      const canvas = await html2canvas(reportRef.current, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: null,
-      });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      let heightLeft = pdfHeight;
-      let position = 0;
-      
+  const renderPageToPdf = async (element: HTMLElement, pdf: jsPDF, isFirstPage: boolean) => {
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: null,
+    });
+    const imgData = canvas.toDataURL("image/png");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    if (!isFirstPage) pdf.addPage();
+
+    let heightLeft = pdfHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+    heightLeft -= pdf.internal.pageSize.getHeight();
+
+    while (heightLeft > 0) {
+      position -= pdf.internal.pageSize.getHeight();
+      pdf.addPage();
       pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
       heightLeft -= pdf.internal.pageSize.getHeight();
-      
-      while (heightLeft > 0) {
-        position -= pdf.internal.pageSize.getHeight();
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-        heightLeft -= pdf.internal.pageSize.getHeight();
-      }
-      
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!page1Ref.current || !page2Ref.current) return;
+    try {
+      setIsPrinting(true);
+      await new Promise((r) => setTimeout(r, 150));
+
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      // Page 1: Scores + Skills
+      await renderPageToPdf(page1Ref.current, pdf, true);
+
+      // Page 2: Market Analysis onward
+      await renderPageToPdf(page2Ref.current, pdf, false);
+
+      // Add clickable donate link on the last page
+      const lastPageHeight = pdf.internal.pageSize.getHeight();
+      const lastPageWidth = pdf.internal.pageSize.getWidth();
+      pdf.link(lastPageWidth / 2 - 30, lastPageHeight - 30, 60, 10, { url: DONATE_URL });
+
       pdf.save(`skillscope-${role.value}.pdf`);
     } catch {
-      // Fallback to text
       const matched = matchedSkills.filter((m) => m.found);
       const lines = [
         `SkillScope Readiness Report — ${role.label}`,
@@ -185,6 +201,8 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         "",
         "SKILL GAPS:",
         ...gaps.map((m) => `  ✗ ${m.skill.name} (${m.skill.category}, demand: ${m.skill.demandLevel}%)`),
+        "",
+        `Donate: ${DONATE_URL}`,
       ];
       const blob = new Blob([lines.join("\n")], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
