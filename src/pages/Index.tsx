@@ -83,7 +83,7 @@ const Index = () => {
       </section>
 
       {/* How it works */}
-      <section className="container py-20">
+      <section className="container py-20 pb-12">
         <motion.h2
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -130,7 +130,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-muted-foreground">
-          SkillScope — Built for career switchers & early-career technologists.
+          SkillScope™. Built for career switchers & aspiring technologists.
         </div>
       </footer>
     </div>
