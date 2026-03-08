@@ -169,12 +169,30 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
     { key: "differentiator", label: "Differentiators" },
   ];
 
-  const scoreLabel =
+  const topStrengthCategory = coreScore >= supportingScore && coreScore >= differentiatorScore
+    ? "core skills"
+    : supportingScore >= differentiatorScore
+    ? "supporting skills"
+    : "differentiators";
+
+  const weakestCategory = coreScore <= supportingScore && coreScore <= differentiatorScore
+    ? "core skills"
+    : supportingScore <= differentiatorScore
+    ? "supporting skills"
+    : "differentiators";
+
+  const scoreSummary =
     overallScore >= 70
-      ? "Strong alignment — focus on differentiators to stand out."
+      ? `Great news — you're well-positioned for this role! Your ${topStrengthCategory} are a strong match. To truly stand out, focus on sharpening your ${weakestCategory}. Check the action plan below for your next steps.`
       : overallScore >= 40
-      ? "Moderate coverage — address core gaps to strengthen your profile."
-      : "Early stage — prioritise building core skills first.";
+      ? `You're building a solid foundation — your ${topStrengthCategory} show real promise. Closing the gaps in ${weakestCategory} will make a big difference. See the action plan below to accelerate your progress.`
+      : `Every expert started here — you've taken the first step! Focus on building your ${weakestCategory} to gain momentum. The action plan below maps out exactly where to begin.`;
+
+  const tabs: { key: SkillCategory; label: string }[] = [
+    { key: "core", label: "Core Skills" },
+    { key: "supporting", label: "Supporting Skills" },
+    { key: "differentiator", label: "Differentiators" },
+  ];
 
   return (
     <motion.div
@@ -201,8 +219,8 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
             Readiness Score
           </h2>
           <ReadinessGauge score={overallScore} />
-          <p className="text-xs text-muted-foreground text-center mt-4 max-w-[220px]">
-            {scoreLabel}
+          <p className="text-sm text-muted-foreground text-center mt-4 leading-relaxed">
+            {scoreSummary}
           </p>
 
           {/* Mini score bars */}
