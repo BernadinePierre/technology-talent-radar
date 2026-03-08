@@ -209,7 +209,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `skillscope-${role.value}.txt`;
+      a.download = `tech-talent-radar-${role.value}.txt`;
       a.click();
       URL.revokeObjectURL(url);
     } finally {
