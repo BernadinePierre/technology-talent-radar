@@ -189,7 +189,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       const lastPageWidth = pdf.internal.pageSize.getWidth();
       pdf.link(lastPageWidth / 2 - 30, lastPageHeight - 30, 60, 10, { url: DONATE_URL });
 
-      pdf.save(`skillscope-${role.value}.pdf`);
+      pdf.save(`tech-talent-radar-${role.value}.pdf`);
     } catch {
       const matched = matchedSkills.filter((m) => m.found);
       const lines = [
