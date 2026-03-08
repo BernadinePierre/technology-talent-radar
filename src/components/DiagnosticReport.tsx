@@ -129,6 +129,9 @@ const SkillsTabContent = ({
 export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) => {
   const { role, region, experience, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore } = result;
   const [activeTab, setActiveTab] = useState<SkillCategory>("core");
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const gaps = matchedSkills.filter((m) => !m.found);
   const topGaps = [...gaps]
