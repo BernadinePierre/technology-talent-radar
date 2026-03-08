@@ -101,7 +101,7 @@ const SkillsTabContent = ({
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               m.found
                 ? meta.color
-                : "bg-muted/60 text-muted-foreground line-through decoration-1"
+                : "bg-muted/60 text-muted-foreground"
             }`}
           >
             {m.found ? (
@@ -293,9 +293,6 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
               ))}
             </div>
             <SkillsTabContent skills={matchedSkills} category={activeTab} />
-            <p className="text-[10px] text-muted-foreground mt-4 text-right italic">
-              Source: IT Jobs Watch
-            </p>
           </div>
         </div>
       </div>
