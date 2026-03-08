@@ -1,5 +1,7 @@
 import { ExternalLink, MapPin, Briefcase, Hourglass, Info } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Tooltip,
   TooltipContent,
@@ -44,13 +46,27 @@ function formatSalary(value: number) {
   return `£${Math.round(value / 1000)}k`;
 }
 
-function buildITJobsWatchUrl(roleLabel: string, region: string) {
-  const roleSlug = encodeURIComponent(roleLabel);
-  const regionSlug = region === "Remote" ? "" : encodeURIComponent(region);
-  return `https://www.itjobswatch.co.uk/jobs/uk/${roleSlug}${regionSlug ? `%20${regionSlug}` : ""}.do`;
-}
-
 export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: MarketAnalysisProps) => {
+  const [url, setUrl] = useState<string>("#");
+
+  useEffect(() => {
+    async function buildUrl() {
+      const [configRes, roleRes, regionRes] = await Promise.all([
+        supabase.from("app_config").select("value").eq("key", "itjobswatch_url_template").single(),
+        supabase.from("job_roles").select("role_encoded").eq("role_name", roleLabel).single(),
+        supabase.from("uk_regions").select("region_encoded").eq("region_name", region).single(),
+      ]);
+
+      if (configRes.data && roleRes.data && regionRes.data) {
+        const built = configRes.data.value
+          .replace("{role_encoded}", roleRes.data.role_encoded)
+          .replace("{region_encoded}", regionRes.data.region_encoded);
+        setUrl(built);
+      }
+    }
+    buildUrl();
+  }, [roleLabel, region]);
+
   const baseSalary = salaryBands[experience] ?? salaryBands["2–3 years"];
   const multiplier = regionMultiplier[region] ?? 1.0;
 
@@ -59,8 +75,6 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
     median: Math.round(baseSalary.median * multiplier),
     max: Math.round(baseSalary.max * multiplier),
   };
-
-  const url = buildITJobsWatchUrl(roleLabel, region);
 
   // Simulated stats
   const demandChange = Math.round((multiplier - 0.9) * 100 + 8);
