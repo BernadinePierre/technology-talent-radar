@@ -16,7 +16,7 @@ export const SupportCard = () => {
 
   const handleDonate = () => {
     // Placeholder — wire to Stripe or payment link
-    const url = `https://buy.stripe.com/test?amount=${Math.round(amount * 100)}`;
+    const url = `https://donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00`;
     window.open(url, "_blank");
   };
 
