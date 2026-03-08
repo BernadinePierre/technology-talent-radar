@@ -38,6 +38,24 @@ export type Database = {
         }
         Relationships: []
       }
+      app_config: {
+        Row: {
+          description: string | null
+          key: string
+          value: string
+        }
+        Insert: {
+          description?: string | null
+          key: string
+          value: string
+        }
+        Update: {
+          description?: string | null
+          key?: string
+          value?: string
+        }
+        Relationships: []
+      }
       diagnostic_results: {
         Row: {
           core_score: number
