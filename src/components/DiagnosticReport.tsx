@@ -138,26 +138,55 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
     .sort((a, b) => b.skill.demandLevel - a.skill.demandLevel)
     .slice(0, 5);
 
-  const handleDownload = () => {
-    const matched = matchedSkills.filter((m) => m.found);
-    const lines = [
-      `SkillScope Readiness Report — ${role.label}`,
-      `Readiness Score: ${overallScore}%`,
-      `Core: ${coreScore}% | Supporting: ${supportingScore}% | Differentiators: ${differentiatorScore}%`,
-      "",
-      "MATCHED SKILLS:",
-      ...matched.map((m) => `  ✓ ${m.skill.name} (${m.skill.category})`),
-      "",
-      "SKILL GAPS:",
-      ...gaps.map((m) => `  ✗ ${m.skill.name} (${m.skill.category}, demand: ${m.skill.demandLevel}%)`),
-    ];
-    const blob = new Blob([lines.join("\n")], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `skillscope-${role.value}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleDownload = async () => {
+    if (!reportRef.current) return;
+    try {
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      let heightLeft = pdfHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pdf.internal.pageSize.getHeight();
+      
+      while (heightLeft > 0) {
+        position -= pdf.internal.pageSize.getHeight();
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pdf.internal.pageSize.getHeight();
+      }
+      
+      pdf.save(`skillscope-${role.value}.pdf`);
+    } catch {
+      // Fallback to text
+      const matched = matchedSkills.filter((m) => m.found);
+      const lines = [
+        `SkillScope Readiness Report — ${role.label}`,
+        `Readiness Score: ${overallScore}%`,
+        `Core: ${coreScore}% | Supporting: ${supportingScore}% | Differentiators: ${differentiatorScore}%`,
+        "",
+        "MATCHED SKILLS:",
+        ...matched.map((m) => `  ✓ ${m.skill.name} (${m.skill.category})`),
+        "",
+        "SKILL GAPS:",
+        ...gaps.map((m) => `  ✗ ${m.skill.name} (${m.skill.category}, demand: ${m.skill.demandLevel}%)`),
+      ];
+      const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `skillscope-${role.value}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   };
 
   // Fetch action items from DB templates
