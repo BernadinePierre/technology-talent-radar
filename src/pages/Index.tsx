@@ -74,7 +74,7 @@ const Index = () => {
               <img
                 src={heroRadar}
                 alt="Radar chart comparing candidate skills against market demand"
-                className="rounded-xl shadow-2xl border border-white/10"
+                className="rounded-xl"
                 loading="lazy"
               />
             </motion.div>
