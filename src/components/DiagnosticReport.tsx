@@ -129,6 +129,7 @@ const SkillsTabContent = ({
 export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) => {
   const { role, region, experience, matchedSkills, overallScore, coreScore, supportingScore, differentiatorScore } = result;
   const [activeTab, setActiveTab] = useState<SkillCategory>("core");
+  const [isPrinting, setIsPrinting] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const reportRef = useRef<HTMLDivElement>(null);
@@ -141,6 +142,10 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
   const handleDownload = async () => {
     if (!reportRef.current) return;
     try {
+      setIsPrinting(true);
+      // Wait for React to re-render with print layout
+      await new Promise((r) => setTimeout(r, 100));
+
       const canvas = await html2canvas(reportRef.current, {
         scale: 2,
         useCORS: true,
@@ -186,6 +191,8 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       a.download = `skillscope-${role.value}.txt`;
       a.click();
       URL.revokeObjectURL(url);
+    } finally {
+      setIsPrinting(false);
     }
   };
 
@@ -370,23 +377,37 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
             <h3 className="text-sm font-semibold font-heading text-muted-foreground mb-4 uppercase tracking-wider">
               Skills Map
             </h3>
-            {/* Tabs */}
-            <div className="flex gap-1 mb-4 bg-muted/50 rounded-lg p-1">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`flex-1 text-xs font-medium px-3 py-2 rounded-md transition-all ${
-                    activeTab === tab.key
-                      ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-            <SkillsTabContent skills={matchedSkills} category={activeTab} />
+            {isPrinting ? (
+              /* Print layout: show all categories inline */
+              <div className="space-y-5">
+                {(["core", "supporting", "differentiator"] as SkillCategory[]).map((cat) => (
+                  <div key={cat}>
+                    <h4 className="text-xs font-semibold mb-2">{categoryMeta[cat].label}</h4>
+                    <SkillsTabContent skills={matchedSkills} category={cat} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Tabs */}
+                <div className="flex gap-1 mb-4 bg-muted/50 rounded-lg p-1">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`flex-1 text-xs font-medium px-3 py-2 rounded-md transition-all ${
+                        activeTab === tab.key
+                          ? "bg-card text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+                <SkillsTabContent skills={matchedSkills} category={activeTab} />
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -426,22 +447,41 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       </p>
 
       {/* Support */}
-      <SupportCard />
+      {isPrinting ? (
+        <div className="bg-card rounded-xl border border-border p-6 text-center">
+          <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-1">
+            Support continued development
+          </h3>
+          <p className="text-xs text-muted-foreground mb-2">
+            Keeps the tool free for everyone.
+          </p>
+          <a
+            href="https://donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00"
+            className="text-sm font-semibold text-primary underline"
+          >
+            donate.stripe.com/7sY7sL1zk5Nfg7f1jV2ZO00
+          </a>
+        </div>
+      ) : (
+        <SupportCard />
+      )}
 
-      {/* Actions */}
-      <div className="flex flex-wrap gap-3 justify-center">
-        <Button variant="hero" size="lg" onClick={handleDownload}>
-          <Download className="w-4 h-4 mr-1" />
-          Download Report
-        </Button>
-        <Button variant="outline" size="lg" onClick={onRestart}>
-          <RotateCcw className="w-4 h-4 mr-1" />
-          New Diagnostic
-        </Button>
-      </div>
+      {/* Actions — hidden in PDF */}
+      {!isPrinting && (
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Button variant="hero" size="lg" onClick={handleDownload}>
+            <Download className="w-4 h-4 mr-1" />
+            Download Report
+          </Button>
+          <Button variant="outline" size="lg" onClick={onRestart}>
+            <RotateCcw className="w-4 h-4 mr-1" />
+            New Diagnostic
+          </Button>
+        </div>
+      )}
 
-      {/* Create Account CTA for guests */}
-      {!user && (
+      {/* Create Account CTA for guests — hidden in PDF */}
+      {!user && !isPrinting && (
         <div className="bg-muted/40 rounded-xl border border-border p-6 text-center">
           <p className="text-sm text-muted-foreground mb-3">
             Want to save reports and track your progress over time?
