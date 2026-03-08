@@ -18,21 +18,21 @@ export type Database = {
         Row: {
           category: string
           created_at: string
-          gap_category: Json
+          gap_category_priority: string
           id: string
           template: string
         }
         Insert: {
           category?: string
           created_at?: string
-          gap_category?: Json
+          gap_category_priority?: string
           id?: string
           template: string
         }
         Update: {
           category?: string
           created_at?: string
-          gap_category?: Json
+          gap_category_priority?: string
           id?: string
           template?: string
         }
