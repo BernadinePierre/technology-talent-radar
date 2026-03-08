@@ -121,7 +121,7 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Open Roles</p>
               <Tooltip>
-                <TooltipTrigger asChild><Info className="w-3 h-3 text-muted-foreground cursor-help" /></TooltipTrigger>
+                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
                 <TooltipContent><p className="text-xs max-w-48">Approximate number of live job postings matching this role and region.</p></TooltipContent>
               </Tooltip>
             </div>
