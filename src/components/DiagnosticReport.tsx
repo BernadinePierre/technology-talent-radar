@@ -471,16 +471,11 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
 
         {/* Support */}
         {isPrinting ? (
-          <div className="bg-card rounded-xl border border-border p-6 text-center">
-            <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-1">
+          <div className="bg-card rounded-xl border border-border p-6 flex flex-col items-center">
+            <h3 className="text-sm font-semibold font-heading uppercase tracking-wider mb-3">
               Support continued development
             </h3>
-            <p className="text-xs text-muted-foreground mb-2">
-              Keeps the tool free for everyone. Click the link below to donate.
-            </p>
-            <p className="text-sm font-semibold text-primary underline">
-              {DONATE_URL}
-            </p>
+            <img src={donateQr} alt="Scan to donate" className="w-40 h-auto rounded-lg" />
           </div>
         ) : (
           <SupportCard />
