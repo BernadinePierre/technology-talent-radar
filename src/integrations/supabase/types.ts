@@ -16,30 +16,24 @@ export type Database = {
     Tables: {
       action_plan_templates: {
         Row: {
-          best_for_gap_level: string[]
-          best_for_skill_type: string[]
           category: string
           created_at: string
+          gap_category: Json
           id: string
-          skill_name: string
           template: string
         }
         Insert: {
-          best_for_gap_level?: string[]
-          best_for_skill_type?: string[]
           category?: string
           created_at?: string
+          gap_category?: Json
           id?: string
-          skill_name: string
           template: string
         }
         Update: {
-          best_for_gap_level?: string[]
-          best_for_skill_type?: string[]
           category?: string
           created_at?: string
+          gap_category?: Json
           id?: string
-          skill_name?: string
           template?: string
         }
         Relationships: []
