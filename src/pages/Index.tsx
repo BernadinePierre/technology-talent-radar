@@ -32,7 +32,7 @@ const Index = () => {
       <nav className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="Tech Talent Radar logo" className="h-8 w-8" />
+            <img src={logo} alt="Tech Talent Radar logo" className="h-10 w-10 rounded-md object-contain" />
             <span className="font-heading text-xl font-bold text-primary tracking-tight">
               Tech Talent Radar
             </span>
