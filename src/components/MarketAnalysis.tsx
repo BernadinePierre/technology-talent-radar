@@ -68,7 +68,6 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
   }, [roleLabel, region]);
 
   const baseSalary = salaryBands[experience] ?? salaryBands["2–3 years"];
-  const baseSalary = salaryBands[experience] ?? salaryBands["2–3 years"];
   const multiplier = regionMultiplier[region] ?? 1.0;
 
   const salary = {
@@ -76,8 +75,6 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience }: Mar
     median: Math.round(baseSalary.median * multiplier),
     max: Math.round(baseSalary.max * multiplier),
   };
-
-  const url = buildITJobsWatchUrl(roleLabel, region);
 
   // Simulated stats
   const demandChange = Math.round((multiplier - 0.9) * 100 + 8);
