@@ -78,6 +78,7 @@ const DiagnosticPage = () => {
                   <History className="w-4 h-4 mr-1" />
                   History
                 </Button>
+                <FeedbackForm />
                 <Button variant="ghost" size="sm" onClick={signOut}>
                   <LogOut className="w-4 h-4 mr-1" />
                   Sign Out
