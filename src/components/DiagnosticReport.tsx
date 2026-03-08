@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import { useRef } from "react";
+import donateQr from "@/assets/donate-qr.png";
 
 interface DiagnosticReportProps {
   result: DiagnosticResult;
