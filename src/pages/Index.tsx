@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FileText, Target, BarChart3, ArrowRight } from "lucide-react";
+import { FileText, Target, BarChart3, ArrowRight, ShieldCheck } from "lucide-react";
+import heroDashboard from "@/assets/hero-dashboard.png";
 
 const steps = [
   {
@@ -12,7 +13,7 @@ const steps = [
   {
     icon: Target,
     title: "Select target role",
-    description: "Choose the UK tech role you're aiming for.",
+    description: "Choose the technical role you're aiming for.",
   },
   {
     icon: BarChart3,
@@ -41,31 +42,45 @@ const Index = () => {
       {/* Hero */}
       <section className="gradient-navy">
         <div className="container py-20 md:py-32">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-2xl"
-          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight mb-6">
-              Know your{" "}
-              <span className="text-gradient">skill gaps</span>
-              <br />
-              before the market does.
-            </h1>
-            <p className="text-lg md:text-xl text-primary-foreground/70 mb-10 max-w-lg leading-relaxed">
-              Compare your CV against real UK tech job demand. Get a clear diagnostic of what you have, what you're missing, and what to learn next.
-            </p>
-            <Button
-              variant="hero"
-              size="xl"
-              onClick={() => navigate("/diagnostic")}
-              className="group"
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
             >
-              Run Free Diagnostic
-              <ArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </motion.div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight mb-6">
+                Know your{" "}
+                <span className="text-gradient">skill gaps</span>
+                <br />
+                before the market does.
+              </h1>
+              <p className="text-lg md:text-xl text-primary-foreground/70 mb-10 max-w-lg leading-relaxed">
+                Compare your CV against live UK tech job demand. Get a clear diagnostic of what you have, what you're missing, and what to learn next.
+              </p>
+              <Button
+                variant="hero"
+                size="xl"
+                onClick={() => navigate("/diagnostic")}
+                className="group"
+              >
+                Run Free Diagnostic
+                <ArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="hidden md:block"
+            >
+              <img
+                src={heroDashboard}
+                alt="SkillScope diagnostic dashboard showing skill analysis charts and progress indicators"
+                className="rounded-xl shadow-2xl border border-white/10"
+                loading="lazy"
+              />
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -102,6 +117,16 @@ const Index = () => {
             </motion.div>
           ))}
         </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+          className="flex items-center justify-center gap-2 mt-10 text-xs text-muted-foreground"
+        >
+          <ShieldCheck className="w-4 h-4 text-accent" />
+          <span>Your CV data is processed securely and is never stored or shared with third parties.</span>
+        </motion.div>
       </section>
 
       {/* Footer */}
