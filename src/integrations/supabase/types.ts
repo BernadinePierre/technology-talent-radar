@@ -155,6 +155,27 @@ export type Database = {
         }
         Relationships: []
       }
+      uk_regions: {
+        Row: {
+          id: number
+          region_encoded: string
+          region_key: string
+          region_name: string
+        }
+        Insert: {
+          id: number
+          region_encoded: string
+          region_key: string
+          region_name: string
+        }
+        Update: {
+          id?: number
+          region_encoded?: string
+          region_key?: string
+          region_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
