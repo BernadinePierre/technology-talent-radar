@@ -65,9 +65,15 @@ const Index = () => {
                 onClick={() => navigate("/diagnostic")}
                 className="group"
               >
-                Run Free Diagnostic
+                Run Free Report
                 <ArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
               </Button>
+              <a
+                href="#how-it-works"
+                className="block mt-4 text-sm text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors underline underline-offset-4"
+              >
+                How does it work?
+              </a>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
