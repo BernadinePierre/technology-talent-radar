@@ -147,40 +147,48 @@ export const MarketAnalysis = ({ roleLabel, roleValue, region, experience, isPri
           <div className="bg-muted/40 rounded-lg p-4 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Median Salary</p>
-              <Tooltip>
-                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
-                <TooltipContent><p className="text-xs max-w-48">Estimated median annual salary for this role, region, and experience level.</p></TooltipContent>
-              </Tooltip>
+              {!isPrinting && (
+                <Tooltip>
+                  <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
+                  <TooltipContent><p className="text-xs max-w-48">Estimated median annual salary for this role, region, and experience level.</p></TooltipContent>
+                </Tooltip>
+              )}
             </div>
             <p className="text-lg font-bold font-heading text-secondary">£{salary.median.toLocaleString()}</p>
           </div>
           <div className="bg-muted/40 rounded-lg p-4 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Open Roles</p>
-              <Tooltip>
-                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
-                <TooltipContent><p className="text-xs max-w-48">Approximate number of live job postings matching this role and region.</p></TooltipContent>
-              </Tooltip>
+              {!isPrinting && (
+                <Tooltip>
+                  <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
+                  <TooltipContent><p className="text-xs max-w-48">Approximate number of live job postings matching this role and region.</p></TooltipContent>
+                </Tooltip>
+              )}
             </div>
             <p className="text-lg font-bold font-heading text-foreground">{openRoles.toLocaleString()}</p>
           </div>
           <div className="bg-muted/40 rounded-lg p-4 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Demand Trend</p>
-              <Tooltip>
-                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
-                <TooltipContent><p className="text-xs max-w-48">Year-over-year change in job postings for this role.</p></TooltipContent>
-              </Tooltip>
+              {!isPrinting && (
+                <Tooltip>
+                  <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
+                  <TooltipContent><p className="text-xs max-w-48">Year-over-year change in job postings for this role.</p></TooltipContent>
+                </Tooltip>
+              )}
             </div>
             <p className="text-lg font-bold font-heading text-accent">+{demandChange}%</p>
           </div>
           <div className="bg-muted/40 rounded-lg p-4 text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Market Share</p>
-              <Tooltip>
-                <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
-                <TooltipContent><p className="text-xs max-w-48">Percentage of all UK tech job postings represented by this role.</p></TooltipContent>
-              </Tooltip>
+              {!isPrinting && (
+                <Tooltip>
+                  <TooltipTrigger asChild><span className="inline-flex"><Info className="w-3 h-3 text-muted-foreground cursor-help" /></span></TooltipTrigger>
+                  <TooltipContent><p className="text-xs max-w-48">Percentage of all UK tech job postings represented by this role.</p></TooltipContent>
+                </Tooltip>
+              )}
             </div>
             <p className="text-lg font-bold font-heading text-foreground">{marketShare}%</p>
           </div>
