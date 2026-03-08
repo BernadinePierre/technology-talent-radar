@@ -1,4 +1,11 @@
-import { ExternalLink, MapPin, Briefcase, BarChart3 } from "lucide-react";
+import { ExternalLink, MapPin, Briefcase, Hourglass, Info } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
 
 interface MarketAnalysisProps {
