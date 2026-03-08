@@ -323,6 +323,11 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       <div ref={page1Ref} className="space-y-6">
         {/* Header */}
         <div>
+          {isPrinting && (
+            <p className="text-sm font-heading font-bold text-primary tracking-tight mb-2">
+              SkillScope
+            </p>
+          )}
           <h1 className="text-2xl md:text-3xl font-bold font-heading mb-1">
             Readiness Report
           </h1>
@@ -442,6 +447,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
           roleValue={role.value}
           region={region}
           experience={experience}
+          isPrinting={isPrinting}
         />
 
         {/* 30-Day Action Plan */}
