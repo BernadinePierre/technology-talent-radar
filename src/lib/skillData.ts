@@ -12,7 +12,7 @@ export interface RoleData {
   skills: Skill[];
 }
 
-export const roles: RoleData[] = [
+export const roles: RoleData[] = ([
   {
     label: "Data Engineer",
     value: "data-engineer",
@@ -601,22 +601,58 @@ export const roles: RoleData[] = [
       { name: "CSM/PSM Certification", category: "differentiator", demandLevel: 55 },
     ],
   },
-];
+  {
+    label: "User Experience (UX) Designer",
+    value: "ux-designer",
+    skills: [
+      { name: "User-Centred Design", category: "core", demandLevel: 95 },
+      { name: "Wireframing & Prototyping", category: "core", demandLevel: 92 },
+      { name: "Figma", category: "core", demandLevel: 90 },
+      { name: "Interaction Design", category: "core", demandLevel: 85 },
+      { name: "Design Systems", category: "core", demandLevel: 82 },
+      { name: "Usability Testing", category: "supporting", demandLevel: 78 },
+      { name: "Information Architecture", category: "supporting", demandLevel: 72 },
+      { name: "Accessibility (WCAG)", category: "supporting", demandLevel: 68 },
+      { name: "HTML/CSS", category: "supporting", demandLevel: 60 },
+      { name: "Motion Design", category: "differentiator", demandLevel: 48 },
+      { name: "Design Thinking Facilitation", category: "differentiator", demandLevel: 45 },
+      { name: "Front-end Development", category: "differentiator", demandLevel: 40 },
+    ],
+  },
+  {
+    label: "User Researcher",
+    value: "user-researcher",
+    skills: [
+      { name: "Qualitative Research", category: "core", demandLevel: 95 },
+      { name: "Usability Testing", category: "core", demandLevel: 92 },
+      { name: "Interview Techniques", category: "core", demandLevel: 90 },
+      { name: "Survey Design", category: "core", demandLevel: 85 },
+      { name: "Research Synthesis", category: "core", demandLevel: 88 },
+      { name: "Quantitative Analysis", category: "supporting", demandLevel: 72 },
+      { name: "A/B Testing", category: "supporting", demandLevel: 65 },
+      { name: "Accessibility Research", category: "supporting", demandLevel: 60 },
+      { name: "Stakeholder Communication", category: "supporting", demandLevel: 75 },
+      { name: "Ethnographic Methods", category: "differentiator", demandLevel: 48 },
+      { name: "Analytics Tools", category: "differentiator", demandLevel: 45 },
+      { name: "Workshop Facilitation", category: "differentiator", demandLevel: 50 },
+    ],
+  },
+] as RoleData[]).sort((a, b) => a.label.localeCompare(b.label));
 
 export const ukRegions = [
-  "London",
-  "South East",
-  "South West",
-  "East of England",
-  "West Midlands",
   "East Midlands",
-  "North West",
+  "East of England",
+  "London",
   "North East",
-  "Yorkshire and the Humber",
-  "Scotland",
-  "Wales",
+  "North West",
   "Northern Ireland",
   "Remote",
+  "Scotland",
+  "South East",
+  "South West",
+  "Wales",
+  "West Midlands",
+  "Yorkshire and the Humber",
 ];
 
 export const experienceLevels = [
