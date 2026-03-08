@@ -189,11 +189,11 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       const lastPageWidth = pdf.internal.pageSize.getWidth();
       pdf.link(lastPageWidth / 2 - 30, lastPageHeight - 30, 60, 10, { url: DONATE_URL });
 
-      pdf.save(`skillscope-${role.value}.pdf`);
+      pdf.save(`tech-talent-radar-${role.value}.pdf`);
     } catch {
       const matched = matchedSkills.filter((m) => m.found);
       const lines = [
-        `SkillScope Readiness Report — ${role.label}`,
+        `Tech Talent Radar Readiness Report — ${role.label}`,
         `Readiness Score: ${overallScore}%`,
         `Core: ${coreScore}% | Supporting: ${supportingScore}% | Differentiators: ${differentiatorScore}%`,
         "",
@@ -209,7 +209,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `skillscope-${role.value}.txt`;
+      a.download = `tech-talent-radar-${role.value}.txt`;
       a.click();
       URL.revokeObjectURL(url);
     } finally {
@@ -325,7 +325,7 @@ export const DiagnosticReport = ({ result, onRestart }: DiagnosticReportProps) =
         <div>
           {isPrinting && (
             <p className="text-sm font-heading font-bold text-primary tracking-tight mb-2">
-              SkillScope
+              Tech Talent Radar
             </p>
           )}
           <h1 className="text-2xl md:text-3xl font-bold font-heading mb-1">

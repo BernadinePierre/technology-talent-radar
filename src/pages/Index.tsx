@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FileText, Target, BarChart3, ArrowRight, ShieldCheck } from "lucide-react";
 import heroRadar from "@/assets/hero-radar.png";
+import logo from "@/assets/logo.png";
 
 const steps = [
   {
@@ -30,9 +31,12 @@ const Index = () => {
       {/* Nav */}
       <nav className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container flex h-16 items-center justify-between">
-          <span className="font-heading text-xl font-bold text-primary tracking-tight">
-            SkillScope
-          </span>
+          <div className="flex items-center gap-2">
+            <img src={logo} alt="Tech Talent Radar logo" className="h-8 w-8" />
+            <span className="font-heading text-xl font-bold text-primary tracking-tight">
+              Tech Talent Radar
+            </span>
+          </div>
           <Button variant="hero" size="sm" onClick={() => navigate("/diagnostic")}>
             Run Diagnostic
           </Button>
@@ -130,7 +134,7 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-muted-foreground">
-          SkillScope™. Built for career switchers & aspiring technologists.
+          Tech Talent Radar™. Built for career switchers & aspiring technologists.
         </div>
       </footer>
     </div>
