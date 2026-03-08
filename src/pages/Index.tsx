@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FileText, Target, BarChart3, ArrowRight, ShieldCheck } from "lucide-react";
-import heroDashboard from "@/assets/hero-dashboard.png";
+import heroRadar from "@/assets/hero-radar.png";
 
 const steps = [
   {
