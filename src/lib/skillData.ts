@@ -683,6 +683,29 @@ export const roles: RoleData[] = ([
       { name: "UX Research", category: "differentiator", demandLevel: 35 },
     ],
   },
+  {
+    label: "Consultant",
+    value: "consultant",
+    skills: [
+      { name: "Problem Solving", category: "core", demandLevel: 95 },
+      { name: "Stakeholder Management", category: "core", demandLevel: 93 },
+      { name: "Business Analysis", category: "core", demandLevel: 90 },
+      { name: "Project Management", category: "core", demandLevel: 88 },
+      { name: "Communication Skills", category: "core", demandLevel: 92 },
+      { name: "PowerPoint", category: "supporting", demandLevel: 80 },
+      { name: "Excel", category: "supporting", demandLevel: 78 },
+      { name: "Data Analysis", category: "supporting", demandLevel: 72 },
+      { name: "Process Improvement", category: "supporting", demandLevel: 70 },
+      { name: "Change Management", category: "supporting", demandLevel: 68 },
+      { name: "Strategic Planning", category: "supporting", demandLevel: 65 },
+      { name: "Workshop Facilitation", category: "supporting", demandLevel: 60 },
+      { name: "Consulting Frameworks", category: "differentiator", demandLevel: 48 },
+      { name: "PMP Certification", category: "differentiator", demandLevel: 42 },
+      { name: "Financial Modelling", category: "differentiator", demandLevel: 45 },
+      { name: "Risk Management", category: "differentiator", demandLevel: 40 },
+      { name: "Industry Expertise", category: "differentiator", demandLevel: 35 },
+    ],
+  },
 ] as RoleData[]).sort((a, b) => a.label.localeCompare(b.label));
 
 export const ukRegions = [
