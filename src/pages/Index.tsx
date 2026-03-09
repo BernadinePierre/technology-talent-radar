@@ -165,14 +165,14 @@ const Index = () => {
                 <li>Clarity about where to focus your time.</li>
               </ul>
               <p>
-                The tech job market moves fast, and the signals aren't always clear. People say "learn the right skills", but figuring out what those actually are often means digging through countless job descriptions and trying to interpret patterns on your own.
+                The tech job market moves fast, and the signals aren't always clear. People say "learn the right skills", but figuring out what those are often means digging through countless job descriptions and trying to interpret patterns on your own.
               </p>
               <p>I built Tech Talent Radar to make that process simpler.</p>
               <p>
-                Instead of guessing what employers want, the tool compares your current skills with real market demand and shows where you stand. Not in theory, but based on the skills employers are actually listing in job postings.
+                Instead of guessing what employers want, the tool compares your current skills with real market demand and shows where you stand. Not in theory, but based on the skills actually listed in job postings.
               </p>
               <p>
-                Tech Talent Radar is here to give people a clearer picture of the gap between where they are and where they want to go, so that they can focus their efforts with intention instead of guesswork.
+                Tech Talent Radar is here to give people a clearer picture of the gap between where they are and where they want to go, so they can focus their efforts with intention instead of guesswork.
               </p>
             </div>
           </motion.div>
